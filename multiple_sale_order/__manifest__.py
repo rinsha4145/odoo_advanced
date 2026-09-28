@@ -7,7 +7,7 @@
     'license': 'LGPL-3',
     'depends': ['base','sale'],
     'data': [
-        'views/nn.xml',
+        'views/account_move_view.xml',
 
     ],
     'application': False,

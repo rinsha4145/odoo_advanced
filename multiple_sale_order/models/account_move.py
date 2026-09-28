@@ -1,3 +1,5 @@
+import typing
+
 from odoo import models, fields, api
 
 
@@ -5,26 +7,33 @@ class AccountMove(models.Model):
     _inherit = "account.move"
 
     sale_order_ids = fields.Many2many('sale.order', string="Sale Order",
-                                      domain="[('invoice_status','!=','invoiced'),('state','=','sale')]")
+                                      domain=" [('invoice_status', '=', 'to invoice'),('partner_id', '=', partner_id)]")
 
     @api.onchange('sale_order_ids')
     def _onchange_sale_order_ids(self):
         for invoice in self:
-            manual_lines = invoice.invoice_line_ids.filtered(lambda line: not line.sale_line_id)
-            invoice.invoice_line_ids = manual_lines
-            print(invoice.invoice_line_ids)
-            for order_line_i in manual_lines:
-                print("kkkk",order_line_i.product_id)
-            a = []
-
+            manual_lines = invoice.invoice_line_ids.filtered(lambda line: line.sale_line_id)
+            invoice.invoice_line_ids -= manual_lines
+            invoice_line = []
             for sale in invoice.sale_order_ids:
+                invoice.invoice_line_ids = False
                 for order_line in sale.order_line:
-                    print(order_line)
-                    if order_line.display_type  :
-                        continue
+                    invoice_line.append((0, 0,
+                                         {'product_id': order_line.product_id.id,
+                                          'quantity': order_line.product_uom_qty,
+                                          'price_unit': order_line.price_unit}))
+            # invoices = invoice_line.filtered(lambda line: line.sale_line_id)
+            invoice.invoice_line_ids = invoice_line
 
-                    a.append ((0,0,
-                        {'move_id':self.id,'product_id': order_line.product_id.id, 'quantity': order_line.product_uom_qty,
-                         'price_unit': order_line.price_unit,'sale_line_id':order_line.id}))
+    def write(self):
+        for sale in self.sale_order_ids:
+            sale.invoice_ids += self.id
+            print(5678, sale.invoice_ids)
 
-            invoice.invoice_line_ids += a
+    def action_post(self):
+        super()._create_invoices()
+        print(7890)
+    #
+    # def write(self, vals):
+    #     print(123123123)
+    #     return super().write(vals)
