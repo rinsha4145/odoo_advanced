@@ -7,7 +7,7 @@
         <field name="arch" type="xml">
 
             <xpath expr="//group[@id='header_left_group']" position="inside">
-            <field name="sale_order_ids" widget="many2many_tags" string="Sale order" invisible="partner_id == False"/>
+            <field name="sale_order_ids" widget="many2many_tags" string="Sale order" invisible="partner_id == False" readonly="state == 'posted'"/>
             </xpath>
         </field>
     </record>

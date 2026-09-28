@@ -1,6 +1,6 @@
 import typing
 
-from odoo import models, fields, api
+from odoo import models, fields, api , Command
 
 
 class AccountMove(models.Model):
@@ -12,8 +12,6 @@ class AccountMove(models.Model):
     @api.onchange('sale_order_ids')
     def _onchange_sale_order_ids(self):
         for invoice in self:
-            manual_lines = invoice.invoice_line_ids.filtered(lambda line: line.sale_line_id)
-            invoice.invoice_line_ids -= manual_lines
             invoice_line = []
             for sale in invoice.sale_order_ids:
                 invoice.invoice_line_ids = False
@@ -22,18 +20,21 @@ class AccountMove(models.Model):
                                          {'product_id': order_line.product_id.id,
                                           'quantity': order_line.product_uom_qty,
                                           'price_unit': order_line.price_unit}))
-            # invoices = invoice_line.filtered(lambda line: line.sale_line_id)
+
             invoice.invoice_line_ids = invoice_line
 
-    def write(self):
-        for sale in self.sale_order_ids:
-            sale.invoice_ids += self.id
-            print(5678, sale.invoice_ids)
 
-    def action_post(self):
-        super()._create_invoices()
-        print(7890)
+
+    # def action_post(self):
+    #     super()._create_invoices()
+    #     print(7890)
     #
-    # def write(self, vals):
-    #     print(123123123)
-    #     return super().write(vals)
+    def write(self, vals):
+        res =  super().write(vals)
+        for invoice in self:
+            for sale in invoice.sale_order_ids:
+                sale.write({'invoice_ids': [Command.link(invoice.id)]})
+                sale.invalidate_recordset(['invoice_ids'])
+                for i in sale.invoice_ids:
+                    print(5678, i.id)
+        return res
