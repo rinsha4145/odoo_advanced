@@ -1,4 +1,3 @@
-from addons.account.models.account_move_line import AccountMoveLine
 from odoo import models, fields, api, Command
 
 
@@ -7,6 +6,7 @@ class AccountMove(models.Model):
 
     sale_order_ids = fields.Many2many('sale.order', string="Sale Order",
                                       domain=" [('invoice_status', '=', 'to invoice'),('partner_id', '=', partner_id)]")
+
     @api.onchange('sale_order_ids')
     def _onchange_sale_order_ids(self):
         for invoice in self:
@@ -18,7 +18,7 @@ class AccountMove(models.Model):
                         {'product_id': order_line.product_id.id,
                          'quantity': order_line.product_uom_qty,
                          'price_unit': order_line.price_unit,
-                         'sale_line_ids': [Command.link(order_line.id)]}))
+                         }))
 
             invoice.invoice_line_ids = invoice_lines
 
@@ -26,11 +26,15 @@ class AccountMove(models.Model):
         res = super().write(vals)
         for invoice in self:
             if not invoice.sale_order_ids:
-                super(AccountMove,invoice).write({'invoice_line_ids': [Command.clear()]})
+                super(AccountMove, invoice).write({'invoice_line_ids': [Command.clear()]})
             else:
-                for order_line in invoice.sale.order_line:
+                for sale in invoice.sale_order_ids:
+                    for order_line in sale.order_line:
+                        invoice_line = invoice.invoice_line_ids.filtered(
+                            lambda line: line.product_id == order_line.product_id )
+                        if invoice_line:
+                            invoice_line.write({'sale_line_ids': [Command.link(order_line.id)]})
                     for invoice_line in invoice.invoice_line_ids:
-                        super(AccountMoveLine,invoice_line).write({'sale_line_ids': [Command.link(order_line.id)]})
                         print(invoice_line.sale_line_ids)
 
         return res
