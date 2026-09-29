@@ -1,6 +1,5 @@
-import typing
-
-from odoo import models, fields, api , Command
+from addons.account.models.account_move_line import AccountMoveLine
+from odoo import models, fields, api, Command
 
 
 class AccountMove(models.Model):
@@ -8,33 +7,30 @@ class AccountMove(models.Model):
 
     sale_order_ids = fields.Many2many('sale.order', string="Sale Order",
                                       domain=" [('invoice_status', '=', 'to invoice'),('partner_id', '=', partner_id)]")
-
     @api.onchange('sale_order_ids')
     def _onchange_sale_order_ids(self):
         for invoice in self:
-            invoice_line = []
+            invoice_lines = []
             for sale in invoice.sale_order_ids:
-                invoice.invoice_line_ids = False
+                invoice.invoice_line_ids = [Command.clear()]
                 for order_line in sale.order_line:
-                    invoice_line.append((0, 0,
-                                         {'product_id': order_line.product_id.id,
-                                          'quantity': order_line.product_uom_qty,
-                                          'price_unit': order_line.price_unit}))
+                    invoice_lines.append(Command.create(
+                        {'product_id': order_line.product_id.id,
+                         'quantity': order_line.product_uom_qty,
+                         'price_unit': order_line.price_unit,
+                         'sale_line_ids': [Command.link(order_line.id)]}))
 
-            invoice.invoice_line_ids = invoice_line
+            invoice.invoice_line_ids = invoice_lines
 
-
-
-    # def action_post(self):
-    #     super()._create_invoices()
-    #     print(7890)
-    #
     def write(self, vals):
-        res =  super().write(vals)
+        res = super().write(vals)
         for invoice in self:
-            for sale in invoice.sale_order_ids:
-                sale.write({'invoice_ids': [Command.link(invoice.id)]})
-                sale.invalidate_recordset(['invoice_ids'])
-                for i in sale.invoice_ids:
-                    print(5678, i.id)
+            if not invoice.sale_order_ids:
+                super(AccountMove,invoice).write({'invoice_line_ids': [Command.clear()]})
+            else:
+                for order_line in invoice.sale.order_line:
+                    for invoice_line in invoice.invoice_line_ids:
+                        super(AccountMoveLine,invoice_line).write({'sale_line_ids': [Command.link(order_line.id)]})
+                        print(invoice_line.sale_line_ids)
+
         return res
