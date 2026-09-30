@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+
+   <record id="sale_order_list_inherit_view" model="ir.ui.view">
+        <field name="name">sale.order.list.inherit</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_quotation_tree_with_onboarding"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//header" position="inside">
+                 <button
+                        string="Confirm"
+                        name="action_confirm"
+                        type="object"
+                        class="btn-secondary"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="sale_order_form_inherit_view" model="ir.ui.view">
+        <field name="name">sale.order.inherit.view</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@id='create_invoice']" position="attributes">
+                <attribute name="invisible">invoice_status != 'to invoice' or state == 'to approve'</attribute>
+            </xpath>
+            <xpath expr="//button[@id='create_invoice_percentage']" position="attributes">
+                <attribute name="invisible">state == 'to approve' or invoice_status != 'no' or state != 'sale'
+                </attribute>
+            </xpath>
+            <xpath expr="//button[@id='quotation_send_primary']" position="attributes">
+                <attribute name="invisible">state == 'to approve' or state != 'draft'</attribute>
+            </xpath>
+            <xpath expr="//button[@id='send_proforma_primary']" position="attributes">
+                <attribute name="invisible">state == 'to approve' or state != 'draft' or invoice_count &gt;= 1
+                </attribute>
+            </xpath>
+            <xpath expr="//button[@name='sale.action_report_saleorder']" position="before">
+                <button
+                        string="Approve &amp; confirm"
+                        name="action_approve"
+                        id="approve_sale_order"
+                        type="object"
+                        class="btn-primary"
+                        data-hotkey="q"
+                        invisible="state != 'to approve'"
+                        groups="sales_team.group_sale_manager"
+                />
+                <button
+                        string="Reject"
+                        name="action_reject"
+                        id="approve_sale_order"
+                        type="object"
+                        data-hotkey="q"
+                        invisible="state != 'to approve'"
+                        groups="sales_team.group_sale_manager"
+                />
+            </xpath>
+            <xpath expr="//group[@name='sale_header']" position="inside">
+                <field name="discount_amount" invisible="1"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
