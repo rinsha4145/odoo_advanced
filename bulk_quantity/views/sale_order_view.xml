@@ -5,26 +5,31 @@
         <field name="model">sale.order</field>
         <field name="inherit_id" ref="sale.view_order_form"/>
         <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
 
-            <xpath expr="//notebook" position="inside">
-                <page string="Product" name="product">
-                    <field
-                            name="product_line_id"
+                <button
+                        string="Add to order line"
+                        id="action_add_to_order_line"
+                        name="action_add_to_order_line"
+                        type="object"
+                        class="btn-primary"
+                        invisible="not selected_product_ids or product_quantity &lt; 1 or state != 'draft'"
 
-                    >
-                        <list editable="bottom">
-
-                            <field name="selected_product_ids"
-                                   widgets="many2many_tags" string="Product Variant"
-                            />
-                            <field name="product_quantity"/>
-                        </list>
-
-                    </field>
-
-
-                </page>
+                />
             </xpath>
+            <xpath expr="//group[@name='order_details']" position="after">
+                <group>
+                    <field name="selected_product_ids"
+                           widget="many2many_tags"
+                    />
+
+                </group>
+                <group>
+
+                    <field name="product_quantity"/>
+                </group>
+            </xpath>
+
         </field>
     </record>
 </odoo>
