@@ -6,9 +6,11 @@
         <field name="inherit_id" ref="base.view_partner_form"/>
         <field name="arch" type="xml">
 
-            <xpath expr="//field[@name='category_id']" position="after">
-            <field name="sale_order_ids" widget="many2many_tags" string="Sale order" invisible="partner_id == False" readonly="state == 'posted'"/>
+             <xpath expr="//field[@name='category_id']" position="after">
+            <field name="restricted"/>
+            <field name="restricted_count" invisible="not restricted"/>
             </xpath>
+
         </field>
     </record>
 </odoo>

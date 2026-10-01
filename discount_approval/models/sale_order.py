@@ -23,6 +23,7 @@ class SaleOrder(models.Model):
             return super().action_confirm()
         else:
             orders_to_confirm = self.env['sale.order']
+            print(orders_to_confirm)
             for record in self:
                 # param_value = self.env['ir.config_parameter'].sudo().get_param(
                 # 'discount_approval.so_double_validation_amount') or False
