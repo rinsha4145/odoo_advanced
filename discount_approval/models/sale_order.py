@@ -14,7 +14,7 @@ class SaleOrder(models.Model):
             for line in record.order_line:
                 if line.discount > 0:
                     record.discount_amount += line.price_unit * line.product_uom_qty * line.discount / 100
-            print(11,record.discount_amount)
+
 
     def action_confirm(self):
         """confirm the order check the discount amount"""
