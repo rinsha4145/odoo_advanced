@@ -8,15 +8,12 @@ class IrUiMenu(models.Model):
         'res.users', string="Restricted Users",
         help='Users restricted from accessing this menu.')
 
+    @api.model
+    def _filter_visible_menus(self):
+        """filter the menu for the visibility"""
+        print(936835)
+        menus = super()._filter_visible_menus()
 
-@api.model
-def _filter_visible_menus(self):
-    """
-    Override to filter out menus restricted for current user.
-    Applies only to the current user context.
-    """
-    menus = super()._filter_visible_menus()
-
-    print(77777)
-    return menus.filtered(
-        lambda m: self.env.user not in m.restrict_user_ids)
+        print(77777)
+        return menus.filtered(
+            lambda m: self.env.user not in m.restrict_user_ids)

@@ -10,8 +10,7 @@ class ResUsers(models.Model):
         print(3456789,vals)
         print(4567,self.menu_ids)
         if 'menu_ids' in vals:
-            for menu in self.menu_ids:
-                menu.write({'restrict_user_ids': [Command.link(self.id)]})
-                print(1298)
-        self.menu_ids._filter_visible_menus()
+            for user in self:
+                old_menus = self.env['ir.ui.menu'].search([('restrict_user_ids','in',user.id)])
+                old_menus.write({'restrict_user_ids': [Command.link(user.id)]})
         return res
