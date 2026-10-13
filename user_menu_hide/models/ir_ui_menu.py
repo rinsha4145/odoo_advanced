@@ -13,7 +13,6 @@ class IrUiMenu(models.Model):
         """filter the menu for the visibility"""
         print(936835)
         menus = super()._filter_visible_menus()
-
         print(77777)
         return menus.filtered(
             lambda m: self.env.user not in m.restrict_user_ids)

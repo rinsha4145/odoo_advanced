@@ -10,7 +10,7 @@
                 <page string="Hide Menu" name="hide menus">
                     <group>
                         <field name="menu_ids"
-                               widget="many2many_tags"
+                               widget="many2many"
                                options="{'no_create': True, 'no_create_edit': True}"/>
                     </group>
                 </page>
