@@ -5,10 +5,11 @@
     'website': 'https://www.yourwebsite.com',
     'sequence': -10,
     'license': 'LGPL-3',
-    'depends': ['base','product','website_sale'],
+    'depends': ['base','product','website_sale','website'],
     'data': [
         'views/res_config_settings_view.xml',
         'views/cart_template.xml',
+        'views/product_detail_view.xml',
     ],
     'application': False,
     'installable': True,

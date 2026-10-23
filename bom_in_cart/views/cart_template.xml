@@ -3,22 +3,27 @@
     <template id='cart_line_inherit_bom' inherit_id="website_sale.cart_lines">
 
         <xpath expr="//div[@name='o_wsale_cart_line_button_container']" position="before">
-            <div t-if="line.company_id.product_ids" t-as="pro">
-                <t t-foreach="line.product_id.bom_ids" t-as="bom">
-                    <field t-out="bom_index + 1"/>
+
+
+            <t t-foreach="line.product_id.bom_ids" t-as="bom">
+                <div t-if="bom['product_tmpl_id'].id in website.product_ids.ids and line.product_id.bom_ids ">
+                    <p style="text-decoration: underline;" t-if="bom_first">Bill of Materials</p>
+                    <field t-out="bom_index + 1"/>)
                     <t t-foreach="bom.bom_line_ids" t-as="b">
                         <t t-foreach="b.product_id" t-as="p">
-                            <div t-if="line.product_id.bom_ids and pro == p">
-                                <field t-out="p['name']"/>
-                                <field t-out="b['product_qty']"/>
-                            </div>
+
+                            <field t-out="p['name']"/>
+                            <span>(<field t-out="b['product_qty']*line['product_uom_qty']"/> qty)</span>
+
+
 
                         </t>
 
                     </t>
-                </t>
+                </div>
 
-            </div>
+            </t>
+
         </xpath>
 
 

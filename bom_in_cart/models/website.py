@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from odoo import fields, models
 
-class ResCompany(models.Model):
-    _inherit = 'res.company'
+class Website(models.Model):
+    _inherit = 'website'
 
     product_ids = fields.Many2many('product.product', string='Products')

@@ -7,7 +7,8 @@
     'license': 'LGPL-3',
     'depends': ['base','website_sale'],
     'data': [
-        'views/cart_template.xml'
+        'views/cart_template.xml',
+
     ],
     'application': False,
     'installable': True,

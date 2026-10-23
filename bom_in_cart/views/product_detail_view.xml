@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <template id='product_shop_inherit' inherit_id="website_sale.cta_wrapper">
+        <xpath expr="//div[@id='o_wsale_cta_wrapper']" position="after">
+
+            <t t-foreach="product.bom_ids" t-as="bom">
+                <div t-if="product.id in website.product_ids.ids and product.bom_ids ">
+                    <h3 t-if="bom_first">Bill of Materials</h3>
+
+                    <field t-out="bom_index + 1"/>
+                    <t t-foreach="bom.bom_line_ids" t-as="b">
+                        <t t-foreach="b.product_id" t-as="p">
+
+
+                            <field t-out="p['name']"/>
+                            <span>(<field t-out="b['product_qty']"/> qty)
+                            </span>
+
+                        </t>
+
+                    </t>
+                </div>
+
+            </t>
+
+        </xpath>
+    </template>
+</odoo>
+
