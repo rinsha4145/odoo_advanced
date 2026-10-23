@@ -2,15 +2,23 @@
 <odoo>
     <template id='cart_line_inherit' inherit_id="website_sale.cart_lines">
         <xpath expr="//a[contains(@class,'js_delete_product')]" position="replace">
+
+
+        </xpath>
+        <xpath expr="//button[contains(@class,'js_delete_product')]" position="replace">
+
+        </xpath>
+        <xpath expr="//div[contains(@class,'o_cart_product')]" position="inside">
             <a
                     href='#'
-                    class="js_delete_product small"
+                    class="js_delete_product small "
                     aria-label="Remove from cart"
                     title="Remove from cart"
             >
-                <i class="fa fa-trash-o"/>
+                <i class="fa fa-fw fa-trash-o"/>
             </a>
         </xpath>
+
 
 
     </template>
