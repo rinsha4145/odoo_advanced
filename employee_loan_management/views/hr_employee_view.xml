@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="hr_empoyee_form_inherit" model="ir.ui.view">
+        <field name="name">hr.employee.form.inherit</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+
+            <xpath expr="//page[@name='work_information']" position="inside">
+                <group>
+                    <field name="loan_not_allowed"/>
+                </group>
+            </xpath>
+        </field>
+    </record>
+</odoo>

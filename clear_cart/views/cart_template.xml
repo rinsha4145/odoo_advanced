@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <template id='cart_line_inherit' inherit_id="website_sale.cart_lines">
+        <xpath expr="//a[contains(@class,'js_delete_product')]" position="replace">
+            <a
+                    href='#'
+                    class="js_delete_product small"
+                    aria-label="Remove from cart"
+                    title="Remove from cart"
+            >
+                <i class="fa fa-trash-o"/>
+            </a>
+        </xpath>
+
+
+    </template>
+    <template id='cart_inherit' inherit_id="website_sale.checkout_layout">
+        <xpath expr="//div[contains(@t-attf-class,'oe_clear_stucture')]" position="inside">
+            <a t-if="request.session['website_sale_cart_quantity'] != 0" role="button"
+               t-attf-class="btn btn-primary w-100"
+               href="/shop/clear_cart">
+                clear cart
+                <i class="fa fa-trash-o"/>
+            </a>
+
+
+        </xpath>
+    </template>
+</odoo>

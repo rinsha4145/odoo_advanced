@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <data noupdate="1">
+        <record id="seq_custom_room_model" model="ir.sequence">
+            <field name="name">Custom Sequence</field>
+            <field name="implementation">standard</field>
+            <field name="code">employee.loan</field>
+            <field name="prefix">EMP/LOAN/</field>
+            <field name="padding">3</field>
+            <field name="number_next">1</field>
+            <field name="number_increment">1</field>
+            <field name="company_id" eval="False"/>
+        </record>
+    </data>
+    <!--WINDOW ACTION-->
+    <record id="action_empoyee_loan_template" model="ir.actions.act_window">
+        <field name="name">Employee Loan</field>
+        <field name="res_model">employee.loan</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_natural_face">Create new Employee Loan</p>
+        </field>
+    </record>
+
+
+    <!--LIST/TREE VIEW-->
+    <record id="empoyee_loan_view_list" model="ir.ui.view">
+        <field name="name">employee.loan.view.list</field>
+        <field name="model">employee.loan</field>
+        <field name="arch" type="xml">
+            <list string="Employee Loan">
+                <field name="name"/>
+                <field name="employee_id"/>
+                <field name="loan_amount"/>
+                <field name="total_payable"/>
+                <field name="state"/>
+            </list>
+        </field>
+    </record>
+
+    <!--FORM VIEW-->
+    <record id="empoyee_loan_template_view_form" model="ir.ui.view">
+        <field name="name">employee.loan.form</field>
+        <field name="model">employee.loan</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <field name="state" widget="statusbar"
+                           statebar_visible="draft,approved,ongoing,paid"/>
+                    <button
+                            string="Approve"
+                            id="monthly_invoice"
+                            name="action_approve"
+                            type="object"
+                            class="btn-primary"
+                            invisible="state != 'draft' "
+
+                    />
+                    <button
+                            string="Create Installment"
+                            id="installment"
+                            name="action_create_installment"
+                            type="object"
+                            class="btn-primary"
+                            invisible="state == 'draft' or loan_line_count == installment_count "
+
+                    />
+                     <button
+                            string="Pay"
+                            id="pay_installment"
+                            name="action_pay_installment"
+                            type="object"
+                            class="btn-primary"
+                            invisible="state != 'ongoing' "
+
+                    />
+
+                </header>
+                <sheet>
+                    <div name="button_box">
+                        <button class="oe_stat_button"
+                                string="Installments"
+                                type="object"
+                                icon="fa-pencil-square-o"
+                                name="action_get_invoice_records">
+
+                            <field string="Installments" name="loan_line_count" widget="statinfo"/>
+
+                        </button>
+                    </div>
+
+                    <div class="d-flex flex-column flex-sm-row align-items-center">
+
+                        <div class="col-12 col-sm-6 col-md-7 col-lg-8 px-4">
+
+                            <h1>
+                                <field name="name"/>
+                            </h1>
+                        </div>
+                    </div>
+                    <group string="Loan Details">
+                        <group>
+                            <field name="employee_id" readonly="state != 'draft'" />
+                            <field name="loan_amount" widget="monetary" readonly="state != 'draft'"/>
+                            <field name="installment_amount" widget="monetary" readonly="state != 'draft'"/>
+                            <field name="paid_amount" widget="monetary" readonly="1"/>
+                        </group>
+                        <group>
+                            <field name="installment_count" readonly="state != 'draft'"/>
+                            <field name="start_date"/>
+                            <field name="total_payable" widget="monetary" readonly="state != 'draft'"/>
+                            <field name="balance_amount" widget="monetary" readonly="1"/>
+                        </group>
+
+                    </group>
+                    <notebook>
+                        <page id="loan_line" name="Loan">
+
+                            <field name="loan_line_ids" create="false" readonly="1"
+                                   options='{"no_open": True, "no_create": True}'>
+                                <list string="Loan">
+                                    <field name="date"/>
+                                    <field name="amount"/>
+                                    <field name="paid"/>
+                                </list>
+                            </field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter/>
+            </form>
+        </field>
+    </record>
+</odoo>
