@@ -7,14 +7,17 @@
                 <div t-if="product.id in website.product_ids.ids and product.bom_ids ">
                     <h3 t-if="bom_first">Bill of Materials</h3>
 
-                    <field t-out="bom_index + 1"/>
                     <t t-foreach="bom.bom_line_ids" t-as="b">
+                        <field t-if="b_first" t-out="bom_index + 1"/>
+
                         <t t-foreach="b.product_id" t-as="p">
+                            <span t-if="b_first">.</span>
 
 
                             <field t-out="p['name']"/>
-                            <span>(<field t-out="b['product_qty']"/> qty)
+                            <span>(<field t-out="b['product_qty']" t-options="{'widget': 'integer'}"/>)
                             </span>
+                            <t t-if="not p_last">,</t>
 
                         </t>
 
