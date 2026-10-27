@@ -3,7 +3,7 @@
         <t t-name="remove_order_line_pos.OrderDisplay" t-inherit="point_of_sale.OrderDisplay"
            t-inherit-mode="extension">
             <xpath expr="//div[hasclass('order-container')]" position="inside">
-                <button t-att-class="buttonClass" t-on-click="() => this.onClick()">
+                <button t-att-class="buttonClass"  style="background-color: #4CAF50; padding: 3px 3px; border: none; border-radius: 6px; font-size: 15px; font-weight: bold; cursor: pointer; display: inline-block;" t-on-click="onClick">
                     Clear the Order
                </button>
 

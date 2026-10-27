@@ -4,7 +4,7 @@
             <xpath expr="//div[hasclass('line-details')]" position="inside">
 <button t-att-class="buttonClass"
         style="background-color: #4CAF50; color: white; padding: 3px 3px; border: none; border-radius: 6px; font-size: 10px; font-weight: bold; cursor: pointer; display: inline-block;"
-        t-on-click="() => this.onClick()">
+        t-on-click="onClick">
     X
            </button>
             </xpath>
