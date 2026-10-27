@@ -13,6 +13,7 @@
         'point_of_sale._assets_pos': [
             'remove_order_line_pos/static/src/xml/orderline.js',
             'remove_order_line_pos/static/src/xml/orderline.xml',
+            'remove_order_line_pos/static/src/xml/order_display.js',
             'remove_order_line_pos/static/src/xml/order_display.xml',
         ],
     },
