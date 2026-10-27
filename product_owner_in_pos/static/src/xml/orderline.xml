@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates id="template" xml:space="preserve">
+        <t t-name="product_owner_in_pos.Orderline" t-inherit="point_of_sale.Orderline" t-inherit-mode="extension">
+            <xpath expr="//div[hasclass('product-name')]" position="inside">
+                <span t-if="vals.owner_id">(<t t-esc="vals.owner_id"/>)</span>
+                <t t-log="vals"/>
+            </xpath>
+        </t>
+    </templates>
