@@ -5,9 +5,10 @@ import {Orderline} from "@point_of_sale/app/components/orderline/orderline";
 
 patch(Orderline.prototype, {
     get lineScreenValues() {
+        // for to pass the value
         return {
             ...super.lineScreenValues,
-            owner_id: this.line?.product_id.owner_id?.name,
+            owner_id: this.line?.product_id?.owner_id?.name,
         };
     },
 

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="action_product_owner" model="ir.actions.act_window">
+        <field name="name">Owner</field>
+        <field name="res_model">product.owner</field>
+        <field name="view_mode">list</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_natural_face">Create a Product Owner</p>
+        </field>
+    </record>
+
+    <menuitem id="menu_product_owner_template_action"
+              name="Owner"
+              action="action_product_owner"
+              parent="point_of_sale.pos_config_menu_catalog"
+              sequence="15"/>
+</odoo>

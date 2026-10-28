@@ -7,7 +7,9 @@
     'license': 'LGPL-3',
     'depends': ['base','product','point_of_sale'],
     'data': [
-        'views/product_view.xml'
+        'security/ir.model.access.csv',
+        'views/product_view.xml',
+        'views/product_owner_view.xml',
     ],
     'assets': {
         'point_of_sale._assets_pos': [
