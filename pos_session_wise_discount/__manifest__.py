@@ -1,0 +1,21 @@
+{
+    'name': 'POS Session Wise Discount',
+    'version': '19.0.1.1',
+    'author': 'Rinsha',
+    'website': 'https://www.yourwebsite.com',
+    'sequence': -10,
+    'license': 'LGPL-3',
+    'depends': ['base', 'pos_sale'],
+    'data': [
+        'views/res_config_settings_view.xml'
+    ],
+    'assets': {
+        'point_of_sale._assets_pos': [
+            'pos_session_wise_discount/static/src/orderline.js',
+            'pos_session_wise_discount/static/src/orderline.xml',
+        ]
+    },
+    'application': False,
+    'installable': True,
+    'auto_install': False,
+}
