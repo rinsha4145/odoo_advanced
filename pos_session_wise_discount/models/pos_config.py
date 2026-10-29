@@ -5,7 +5,7 @@ class PosConfig(models.Model):
     _inherit = 'pos.config'
 
     discount_amount_limit = fields.Integer(string="Discount Limit", readonly=False)
-    total_discount_amount = fields.Float(string='total discount amount', readonly=True, default=0)
+    total_discount_amount = fields.Float(string='total discount amount', readonly=True)
 
     # @api.model
     # def _load_pos_data_fields(self, config_id):

@@ -16,16 +16,17 @@ patch(Orderline.prototype, {
     get totalDiscount() {
         let order = this.pos.getOrder();
         let payment = order.getSelectedPaymentline()
-        console.log(8888, payment)
-        let total_discount_amount = this.pos.config.total_discount_amount;
-
-        console.log(6666, this.pos.config.total_discount_amount)
+        let current_total_discount_amount = this.value()
+        // let current_total_discount_amount = this.pos.config.total_discount_amount;
+        let total_discount_amount = 0
+        console.log(6666, current_total_discount_amount)
 
         let discount_amount_limit = this.pos.config.discount_amount_limit
         if (discount_amount_limit > 0) {
-            total_discount_amount = Number(total_discount_amount + order.getTotalDiscount())
+            let amount = order.getTotalDiscount()
+            let total_discount_amount = current_total_discount_amount + amount
             // Number(sessionStorage.getItem("total_discount_amount")) + order.getTotalDiscount();
-            console.log(1111, discount_amount_limit)
+
             if (total_discount_amount > discount_amount_limit) {
                 alert('discount limit is over')
             }
@@ -33,16 +34,20 @@ patch(Orderline.prototype, {
 
             // sessionStorage.setItem("total_discount_amount", total_discount_amount);
 
-            payment.validateOrder()
-            {
-
+            // let success = payment.validateOrder()
+            if (payment) {
+                console.log(789, payment)
                 this.orm.write("pos.config", [this.pos.config.id], {total_discount_amount: total_discount_amount});
             }
         }
-        return {
-            discount_amount: total_discount_amount || 0
-        }
+
+        return {discount_amount: total_discount_amount || 0}
+
 
     },
+    async value() {
+        const result = await this.pos.data.read("pos.config", [this.pos.config.id], ["total_discount_amount"]);
+        return result[0].total_discount_amount
+    }
 
 })
