@@ -11,8 +11,8 @@
     ],
     'assets': {
         'point_of_sale._assets_pos': [
-            'pos_session_wise_discount/static/src/orderline.js',
-            'pos_session_wise_discount/static/src/orderline.xml',
+            'pos_session_wise_discount/static/src/pos_store.js',
+            # 'pos_session_wise_discount/static/src/pos_store.xml',
         ]
     },
     'application': False,
