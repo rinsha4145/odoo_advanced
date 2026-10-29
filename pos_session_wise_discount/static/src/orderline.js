@@ -3,33 +3,46 @@ import {patch} from "@web/core/utils/patch";
 import {ControlButtons,} from "@point_of_sale/app/screens/product_screen/control_buttons/control_buttons";
 import {usePos} from "@point_of_sale/app/hooks/pos_hook";
 import {Orderline} from "@point_of_sale/app/components/orderline/orderline";
+import {useService} from "@web/core/utils/hooks";
 
 
 patch(Orderline.prototype, {
     setup() {
         super.setup(...arguments);
         this.pos = usePos();
+        this.orm = useService("orm");
     },
 
     get totalDiscount() {
         let order = this.pos.getOrder();
-        let total_discount_amount = 0;
+        let payment = order.getSelectedPaymentline()
+        console.log(8888, payment)
+        let total_discount_amount = this.pos.config.total_discount_amount;
 
+        console.log(6666, this.pos.config.total_discount_amount)
 
-
-        let discount_amount_limit = this.pos.config.discount_amount
-        total_discount_amount = total_discount_amount + order.getTotalDiscount()
+        let discount_amount_limit = this.pos.config.discount_amount_limit
+        if (discount_amount_limit > 0) {
+            total_discount_amount = Number(total_discount_amount + order.getTotalDiscount())
             // Number(sessionStorage.getItem("total_discount_amount")) + order.getTotalDiscount();
-        // console.log(56789,order.currencyDisplayPriceIncl)
-        if (total_discount_amount > discount_amount_limit) {
-            alert('discount limit is over')
-        }
-        console.log(456789,total_discount_amount)
-        if(total_discount_amount > 0)
+            console.log(1111, discount_amount_limit)
+            if (total_discount_amount > discount_amount_limit) {
+                alert('discount limit is over')
+            }
+            console.log(2222, total_discount_amount)
+
             // sessionStorage.setItem("total_discount_amount", total_discount_amount);
-        return {
-            discount_amount: total_discount_amount
+
+            payment.validateOrder()
+            {
+
+                this.orm.write("pos.config", [this.pos.config.id], {total_discount_amount: total_discount_amount});
+            }
         }
+        return {
+            discount_amount: total_discount_amount || 0
+        }
+
     },
 
 })

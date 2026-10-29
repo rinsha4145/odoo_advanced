@@ -8,7 +8,7 @@
             <xpath expr="//setting[@id='down_payment_product']" position="after">
                 <setting company_dependent="1"
                          help="Add a discount amount limit for this session">
-                    <field name="discount_amount"/>
+                    <field name="discount_amount_limit"/>
                 </setting>
             </xpath>
         </field>
