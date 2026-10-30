@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+    <t t-name="pos_session_wise_discount.ControlButtons" t-inherit="point_of_sale.ControlButtons"
+       t-inherit-mode="extension">
+        <xpath expr="//button[@t-if='pos.config.use_presets and !props.showRemainingButtons']"
+               position="before">
+            <t t-set="data" t-as="val"/>
+            <t t-log="value"/>
+            <span>Remaining discount amount:
+    <t class="fw-bold" t-out="this.pos.config.discount_amount_limit - this.pos.session.total_discount_amount"/></span>
+
+        </xpath>
+    </t>
+</templates>

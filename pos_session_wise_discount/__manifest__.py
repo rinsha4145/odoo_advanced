@@ -12,7 +12,9 @@
     'assets': {
         'point_of_sale._assets_pos': [
             'pos_session_wise_discount/static/src/pos_store.js',
-            # 'pos_session_wise_discount/static/src/pos_store.xml',
+            'pos_session_wise_discount/static/src/payment_screen.js',
+            'pos_session_wise_discount/static/src/control_buttons.xml',
+            'pos_session_wise_discount/static/src/control_buttons.js'
         ]
     },
     'application': False,
