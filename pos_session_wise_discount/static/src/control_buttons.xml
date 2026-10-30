@@ -4,10 +4,9 @@
        t-inherit-mode="extension">
         <xpath expr="//button[@t-if='pos.config.use_presets and !props.showRemainingButtons']"
                position="before">
-            <t t-set="data" t-as="val"/>
-            <t t-log="value"/>
             <span>Remaining discount amount:
-    <t class="fw-bold" t-out="this.pos.config.discount_amount_limit - this.pos.session.total_discount_amount"/></span>
+
+    <t t-out="Math.max(0,(this.pos.config.discount_amount_limit - state.value).toFixed(2))"/></span>
 
         </xpath>
     </t>
