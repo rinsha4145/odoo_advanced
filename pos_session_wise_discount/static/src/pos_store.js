@@ -15,10 +15,13 @@ patch(PosStore.prototype, {
         let total_discount_amount = 0
         let discount_amount_limit = 0
         const result = await this.data.read("pos.session", [session.id], ["total_discount_amount"])
-        console.log(222, result[0].total_discount_amount)
+        // this.result = this.data.models["pos.session"].get(session.id).total_discount_amount;
 
+        // console.log(222, result[0].total_discount_amount)
+
+        // total_discount_amount = this.result
         total_discount_amount = result[0].total_discount_amount
-        console.log(6666, total_discount_amount)
+        console.log('total_discount_amount', total_discount_amount)
         discount_amount_limit = this.config.discount_amount_limit
         if (discount_amount_limit > 0) {
             let amount = order.getTotalDiscount()
@@ -28,10 +31,9 @@ patch(PosStore.prototype, {
             if (total_discount_amount > discount_amount_limit) {
                 this.dialog.add(AlertDialog, {
                     title: _t("Discount Limit Exceed"),
-                    body: _t("From the discount limit: %s & you have  remaining of %s amount can add", discount_amount_limit, Math.max(0,(discount_amount_limit -  result[0].total_discount_amount).toFixed(2))),
+                    body: _t("From the discount limit: %s & you have  remaining of %s amount can add", discount_amount_limit, Math.max(0,(discount_amount_limit - this.result).toFixed(2))),
                 });
             }
-            console.log(2222, total_discount_amount)
 
         }
         return super.pay(...arguments);
