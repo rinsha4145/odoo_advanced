@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+   <t t-name="systray_dropdown" owl="1">
+       <Dropdown>
+       <div class="new_icon">
+                  <div class="icon_div ">
+                      <div class="toggle-icon" role="button">
+                          <i id='weather_icon'
+                             class="fa fa-lg fa-sun-o fa-1.5x"
+                             style="color: white; margin-bottom:10px; padding:12px;"
+                             role="img" aria-label="weather Notification"/>
+                      </div>
+                  </div>
+              </div>
+           <t t-set-slot="content">
+                <div t-if="this.state.weather_data.main"
+
+                     style="overflow:hidden;width:300px;height:200;padding:1px">
+                     <t t-esc="this.state.today"/>
+                    <!-- Weather card container -->
+                    <div class="d-flex flex-col justify-content-around">
+
+                        <div class="d-flex justify-content-center">
+                             <span> Min <t
+                                     t-esc="Math.round(this.state.weather_data.main.temp - 273.15)"/>
+                                 <i class="fa fa-long-arrow-up" aria-hidden="true"/></span>
+                            <span>Max<t t-esc="Math.round(this.state.weather_data.main.temp - 273.15)"/>
+                                <i class="fa fa-long-arrow-down" aria-hidden="true"/></span>
+                            <h2 class="font-light text-info"
+                                t-if="this.state.weather_data.main.temp">
+                                                <span t-esc="Math.round(this.state.weather_data.main.temp - 273.15)"/>
+                                <sup>°</sup>C
+                                <span t-esc="this.state.weather_data.weather[0].main"/>
+                                            </h2>
+                        </div>
+                        <img class="px-1" width="100px" hieght="100px"
+                             t-att-src="this.state.imageurl"
+                             alt="Card image cap" style=""/>
+
+
+                    </div>
+                    <div class="row">
+
+
+                                            <!-- Temperature and description -->
+
+                        <small>
+                                                <span><t t-esc="this.state.weather_data.weather[0].description"/>
+                                                    in
+                                                    <t t-esc="this.state.weather_data.name"/></span>
+                                            </small>
+
+                            </div>
+                    </div>
+
+               <div t-else="" class="alert alert-warning"
+                    style="height: 51px; margin-top: -7px;padding: 15px;margin-bottom: -6px;">
+                    <i class="fa fa-exclamation-triangle"/>
+                   <strong>Warning!</strong>
+                   Please configure your API key and Location in the Weather
+                   settings.
+                </div>
+            </t>
+        </Dropdown>
+        </t>
+        </templates>
+
+
