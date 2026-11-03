@@ -7,6 +7,7 @@
     'license': 'LGPL-3',
     'depends': ['base','web','mail'],
     'data': [
+        'views/res_config_settings_views.xml'
     ],
     'assets': {
        'web.assets_backend': [

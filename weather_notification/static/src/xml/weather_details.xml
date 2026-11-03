@@ -13,7 +13,7 @@
       </div>
 
            <t t-set-slot="content">
-                <div t-if="this.state?.weather_data"
+                <div t-if="this.state?.weather_data and this.state?.api"
 
                      class="card border-0 shadow-sm p-3 bg-white" style="width:300px;overflow:hidden;">
                       <!-- Weather card container -->
@@ -58,8 +58,8 @@
 
                <div t-else="" class="alert alert-warning"
                     style="height: 51px; margin-top: -7px;padding: 15px;margin-bottom: -6px;">
-                   <strong>Sorry!  </strong>
-                   Currently we can't get the data
+<span t-esc="this.state.error_message"/>
+
                 </div>
             </t>
         </Dropdown>
