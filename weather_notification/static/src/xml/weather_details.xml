@@ -9,7 +9,7 @@
              class="fa fa-lg fa-sun-o fa-1.5x "
              style="color: white; padding:12px;"
              aria-hidden="true"
-             role="img" aria-label="weather Notification" t-on-click="getdata"/>
+             role="img" aria-label="weather Notification" />
       </div>
 
            <t t-set-slot="content">
