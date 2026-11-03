@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+   <t t-name="systray_dropdown" owl="1">
+       <Dropdown>
+
+
+      <div class="toggle-icon o-nail-DiscussSystray-class " role="button">
+          <i id='weather_icon'
+             class="fa fa-lg fa-sun-o fa-1.5x "
+             style="color: white; padding:12px;"
+             aria-hidden="true"
+             role="img" aria-label="weather Notification" t-on-click="getdata"/>
+      </div>
+
+           <t t-set-slot="content">
+                <div t-if="this.state?.weather_data"
+
+                     class="card border-0 shadow-sm p-3 bg-white" style="width:300px;overflow:hidden;">
+                      <!-- Weather card container -->
+                    <div class="d-flex justify-content-between align-items-center mb-2 text-muted small">
+                     <span class="fw-bold" t-esc="this.state.today"/>
+                        <span class="text-truncate" style="max-width:150px;" t-esc="this.state.weather_data.name"/>
+
+                    </div>
+
+
+                    <div class="d-flex align-items-center justify-content-between my-2">
+                        <div>
+                            <h2 class="fw-light text-info mb-0 gap-1" t-if="this.state.weather_data.main.temp">
+                            <span
+                                    t-esc="Math.round(this.state.weather_data.main.temp - 273.15)"/>°c
+                                <span
+                                        t-esc="this.state.weather_data.weather[0].main"/>
+
+                            </h2>
+                            <div class="text-capitalize text-muted small mt-1"
+                                 t-esc="this.state.weather_data.weather[0].description"/>
+                        </div>
+                        <div>
+                             <img class="img-fluid" width="80px" hieght="80px"
+                                  t-att-src="this.state.imageurl"
+                                  alt="Card image cap" style=""/>
+                        </div>
+                        </div>
+
+                    <div class="d-flex justify-content-between border-top pt-2 mt-2 text-muted small">
+                             <span> Min
+                                 <!--                                 <i class="fa fa-long-arrow-up text-primary me-1" aria-hidden="true"/>-->
+
+                                 <t t-esc="Math.round(this.state.weather_data.main.temp_min - 273.15)"/>°c
+                             </span>
+                        <span> Max
+                            <!--                            <i class="fa fa-long-arrow-down text-primary me-1" aria-hidden="true"/>-->
+                            <t t-esc="Math.round(this.state.weather_data.main.temp_max - 273.15)"/>°c
+                            </span>
+                    </div>
+                </div>
+
+               <div t-else="" class="alert alert-warning"
+                    style="height: 51px; margin-top: -7px;padding: 15px;margin-bottom: -6px;">
+                   <strong>Sorry!  </strong>
+                   Currently we can't get the data
+                </div>
+            </t>
+        </Dropdown>
+        </t>
+        </templates>
+
+

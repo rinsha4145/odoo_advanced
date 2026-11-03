@@ -7,14 +7,11 @@
     'license': 'LGPL-3',
     'depends': ['base','web','mail'],
     'data': [
-        'security/ir.model.access.csv',
-
     ],
     'assets': {
-
        'web.assets_backend': [
-           'weather_notification/static/src/xml/weather_icon.xml',
-           'weather_notification/static/src/js/weather_icon.js',
+           'weather_notification/static/src/xml/weather_details.xml',
+           'weather_notification/static/src/js/weather_details.js',
         ],
     },
     'application': False,
