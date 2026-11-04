@@ -1,19 +1,28 @@
 /** @odoo-module **/
-import { registry } from "@web/core/registry";
+import {registry} from "@web/core/registry";
+import {Component,useState} from "@odoo/owl";
 import { standardFieldProps } from "@web/views/fields/standard_field_props";
-import { Component } from "@odoo/owl";
+
 export class CharCounter extends Component {
     static template = "character_counter.widget";
     static props = {
         ...standardFieldProps,
     };
-    updateValue(val) {
-        this.props.record.update({ [this.props.name]: val });
+
+    setup() {
+        this.maxCount = 100;
+        this.state = useState({
+            text: this.props.value || "",
+        });
     }
-    get value() {
-        return this.props.record.data[this.props.name];
+
+    onInputText(ev) {
+        const val = ev.target.value;
+        this.state.text = val;
+        console.log(567,this.props.record)
     }
 }
+
 export const charCounter = {
     component: CharCounter,
     supportedTypes: ["integer"],

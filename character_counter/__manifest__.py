@@ -10,12 +10,10 @@
         'views/sale_order_view.xml'
     ],
     'assets': {
-      'point_of_sale._assets_pos': [
-      ],
        'web.assets_backend': [
+           'character_counter/static/src/xml/character_counter.xml',
            'character_counter/static/src/js/character_counter.js',
-           'character_counter/static/src/js/character_counter.xml'
-           
+
         ],
     },
     'application': False,

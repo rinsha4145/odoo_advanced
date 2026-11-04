@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-name="character_counter.widget" owl="1">
+        <div class="d-flex flex-column w-100 position-relation">
+                     <input id="about"
+                            class="border-bottom  mb-1 "
+                            t-att-value="state.text"
+                            t-on-input="onInputText"/>
+            <div class="form-helper text-end text-muted small pe-1">
+                       <span
+                               t-att-class="state.text.length &gt; (this.maxCount - 10) ? 'text-danger' : 'text-info'">
+                           <field t-esc="state.text.length"/>
+
+        </span>/<field t-esc="this.maxCount"/>
+                    </div>
+                </div>
+    </t>
+        </templates>
