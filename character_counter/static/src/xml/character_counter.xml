@@ -3,13 +3,11 @@
     <t t-name="character_counter.widget" owl="1">
         <div class="d-flex flex-column w-100 position-relation">
             <input id="about" class="border-0 border-bottom form-control shadow-none  mb-1 "
-                            t-att-value="state.text" t-on-input="onInputText"/>
+                            t-att-value="state.text" />
             <div class="form-helper text-end text-muted small pe-1">
-                <span
-                               t-att-class="state.text.length &gt; (this.props.max_count - 10) ? 'text-danger' : 'text-info'">
+                <span t-att-class="state.text.length &gt; (this.max_field - 10) ? 'text-danger' : 'text-info'">
                     <field t-esc="state.text.length"/>
-
-            </span>/<field t-esc="this.props.max_count"/>
+            </span>/<field t-esc="this.max_field"/>
                     </div>
                 </div>
     </t>

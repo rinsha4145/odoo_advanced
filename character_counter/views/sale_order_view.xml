@@ -6,7 +6,7 @@
         <field name="inherit_id" ref="sale.view_order_form"/>
         <field name="arch" type="xml">
             <xpath expr="//group[@name='order_details']" position="inside">
-                <field name="about" class="mb-1" string="About" widget="char_counter" options="{'max_count':50,'max_field':'id'}"/>
+                <field name="about" class="mb-1" string="About" widget="char_counter" options="{'max_count':50,'max_field':'delivery_count'}"/>
             </xpath>
         </field>
     </record>
