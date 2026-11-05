@@ -1,54 +1,49 @@
 /** @odoo-module **/
 import {registry} from "@web/core/registry";
-import {Component, useState} from "@odoo/owl";
+import {Component, useState, onMounted} from "@odoo/owl";
 import {standardFieldProps} from "@web/views/fields/standard_field_props";
 import {useInputField} from "@web/views/fields/input_field_hook";
+import {CharField} from "@web/views/fields/char/char_field";
 
 
-export class CharCounter extends Component {
+export class CharCounter extends CharField {
     static template = "character_counter.widget";
     static props = {
         ...standardFieldProps,
-        about: {type: String},
         max_count: {type: Number},
         max_field: {type: String},
     };
 
     setup() {
         this.state = useState({
-            text:  "",
+            length: 0,
         });
-
         useInputField({
             getValue: () => this.props.record.data[this.props.name] || "",
+            refName: "input",
             parse: (v) => this.parse(v),
         });
-        this.options
 
-    }
+        onMounted(() => {
+            this.state.length = this.props.record.data[this.props.name].length
+        })
 
-    get options() {
         this.max_field = this.props.record.data[this.props.max_field] || this.props.max_count
-        console.log(456789, this.props.record.data[this.props.max_field])
-        console.log(456789, this.max_field)
     }
 
     onInputText(ev) {
-        const val = ev.target.value;
-        this.state.text = val;
-        this.props.record.update({[this.props.name]: val})
+        this.state.length = ev.target.value.length;
     }
+
 }
 
 export const charCounter = {
     component: CharCounter,
-    supportedTypes: ["integer"],
-    extractProps({options,name}) {
-        console.log(123,name)
+    supportedTypes: ["char", "text"],
+    extractProps({options}) {
         return {
             max_count: options.max_count || 25,
-            max_field: options.max_field,
-            about: name
+            max_field: options.max_field
         };
     },
 };
