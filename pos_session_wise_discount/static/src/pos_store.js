@@ -31,7 +31,7 @@ patch(PosStore.prototype, {
             if (total_discount_amount > discount_amount_limit) {
                 this.dialog.add(AlertDialog, {
                     title: _t("Discount Limit Exceed"),
-                    body: _t("From the discount limit: %s & you have  remaining of %s amount can add", discount_amount_limit, Math.max(0,(discount_amount_limit - this.result).toFixed(2))),
+                    body: _t("You reached your Discount limit for this session"),
                 });
             }
 
@@ -39,3 +39,4 @@ patch(PosStore.prototype, {
         return super.pay(...arguments);
     },
 })
+                    // body: _t("From the discount limit: %s & you have  remaining of %s amount can add", discount_amount_limit, Math.max(0,(discount_amount_limit - this.result).toFixed(2))),

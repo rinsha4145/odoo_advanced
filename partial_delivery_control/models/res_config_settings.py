@@ -10,7 +10,6 @@ class ResConfigSettings(models.TransientModel):
     def set_values(self):
         super(ResConfigSettings, self).set_values()
         approval_group = self.env.ref('partial_delivery_control.group_delivery_approval_user',False)
-        print(approval_group)
         for user in self.approval_users:
             user.write({
                 'group_ids': [Command.link(approval_group.id)]

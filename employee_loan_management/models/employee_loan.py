@@ -34,7 +34,6 @@ class EmployeeLoan(models.Model):
     @api.depends('loan_line_ids.paid')
     def _compute_paid_amount(self):
         self.paid_amount = sum(self.loan_line_ids.search([('loan_id','=',self.id),('paid', '=', True)]).mapped('amount'))
-        print(5678,self.loan_line_ids.search([('loan_id','=',self.id),('paid', '=', True)]))
 
 
 

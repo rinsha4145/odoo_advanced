@@ -13,9 +13,7 @@ class SaleOrder(models.Model):
             products = record.partner_id.product_ids
             if record.associated_product:
                 if record.order_line.product_id != products:
-                    print(900)
                     for product in products:
-                        print(777)
                         order_lines.append(Command.create(
                             {'product_id' : product,
                              }))

@@ -19,7 +19,6 @@ class SaleOrder(models.Model):
     def action_confirm(self):
         """confirm the order check the discount amount"""
         if self.env.user.has_group('sales_team.group_sale_manager'):
-            print(self.env.user.has_group('sales_team.group_sale_manager'))
             return super().action_confirm()
         else:
             orders_to_confirm = self.env['sale.order']

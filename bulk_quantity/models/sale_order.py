@@ -18,7 +18,6 @@ class SaleOrder(models.Model):
                 if existing_line:
                     existing_line.product_uom_qty += order.product_quantity
                 else:
-                    print(000)
                     invoice_lines.append(Command.create(
                         {
                             'order_id': order.id,
