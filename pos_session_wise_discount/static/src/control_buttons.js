@@ -10,9 +10,9 @@ patch(ControlButtons.prototype, {
         this.pos = usePos();
         this.orm = useService('orm')
         this.data =
-        this.state = useState({
-            value: 0
-        });
+            this.state = useState({
+                value: 0
+            });
         onRendered(async () => {
             await this.getdata()
 
@@ -21,16 +21,15 @@ patch(ControlButtons.prototype, {
     },
     async getdata() {
         let order = this.pos.getOrder();
-        const result = await this.orm.read("pos.session", [this.pos.session.id], ["total_discount_amount"])
-            // this.result = this.pos.models["pos.session"].get(this.pos.session.id).total_discount_amount;
+        // const result = await this.orm.read("pos.session", [this.pos.session.id], ["total_discount_amount"])
+        this.result = this.pos.models["pos.session"].get(this.pos.session.id).total_discount_amount;
 
         let amount = order.getTotalDiscount() || 0
-        this.state.value = Number(result[0].total_discount_amount + amount)
-        // this.state.value = Number(this.result + amount)
+        // this.state.value = Number(result[0].total_discount_amount + amount)
+        this.state.value = Number(this.result + amount)
         console.log('this.state.value', this.state.value)
         console.log('this.result', this.result)
         console.log('this.pos.session.id', this.pos.session.id)
-
 
 
     }

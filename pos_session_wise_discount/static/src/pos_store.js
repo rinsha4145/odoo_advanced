@@ -14,13 +14,13 @@ patch(PosStore.prototype, {
         let session = order.session_id
         let total_discount_amount = 0
         let discount_amount_limit = 0
-        const result = await this.data.read("pos.session", [session.id], ["total_discount_amount"])
-        // this.result = this.data.models["pos.session"].get(session.id).total_discount_amount;
+        // const result = await this.data.read("pos.session", [session.id], ["total_discount_amount"])
+        this.result = this.data.models["pos.session"].get(session.id).total_discount_amount;
 
         // console.log(222, result[0].total_discount_amount)
 
-        // total_discount_amount = this.result
-        total_discount_amount = result[0].total_discount_amount
+        total_discount_amount = this.result
+        // total_discount_amount = result[0].total_discount_amount
         console.log('total_discount_amount', total_discount_amount)
         discount_amount_limit = this.config.discount_amount_limit
         if (discount_amount_limit > 0) {
