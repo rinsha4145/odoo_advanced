@@ -1,5 +1,5 @@
 {
-    'name': 'Warehouse LImit',
+    'name': 'Warehouse Limit',
     'version': '19.0.1.1',
     'author': 'Rinsha',
     'website': 'https://www.yourwebsite.com',
