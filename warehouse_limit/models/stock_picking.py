@@ -18,28 +18,34 @@ class StockPicking(models.Model):
     #                 # print(34567, value)
     def button_validate(self):
         res = super().button_validate()
-        for move in self.move_ids:
-            print(234232, move.location_dest_id.usage)
+        for move in self:
+            print(234232, move.location_dest_id)
             if move.location_dest_id.usage == 'internal':
-                warehouse = self.env['stock.warehouse'].search(
-                    [('lot_stock_id', 'parent_of', move.location_dest_id.id)], limit=1)
+                warehouse = move.location_dest_id.warehouse_id
+                    # self.env['stock.warehouse'].search(
+                    # [('lot_stock_id', 'parent_of', move.location_dest_id.id)], limit=1))
                 print(234, warehouse.read())
 
                 if warehouse and warehouse.quantity_limit > 0:
                     locations = self.env['stock.location'].search(
-                        [('id', 'child_of', warehouse.view_location_id.id)]).ids
-
+                        [('warehouse_id', '=', warehouse.id)]).ids
                     print(234, locations)
-                    stock = self.env['stock.quaunt'].search(
-                        [('location_id', 'in', locations)])
-                    print(9999999, stock)
 
-                    sum_of_qty = sum(stock.mapped('quantity'))
-                    total = sum_of_qty + sum(move.mapped('product_uom_qty'))
+                    if locations:
+                        stock = self.env['stock.quant'].search(
+                            [('location_id', 'in', locations)])
+                        total = sum(stock.mapped('quantity'))
+                    # print(9999999,self.read())
 
-                    print(2345, stock.read())
-                    if total > warehouse.quantity_limit:
-                        raise UserError("%s remaining space in the warehouse" % (sum_of_qty - warehouse.quantity_limit))
+                        sum_of_qty =  sum(self.move_ids.mapped('quantity'))
+
+
+                        # print(454545, sum(stock.mapped('quantity')))
+                        print(2345, stock.read())
+                        print(3333, total)
+                        if total > warehouse.quantity_limit:
+                            raise UserError("%s remaining space in the warehouse"
+                                            % max(warehouse.quantity_limit-(total-sum_of_qty), 0))
         return res
 
 # def _action_done(self, cancel_backorder=False):
