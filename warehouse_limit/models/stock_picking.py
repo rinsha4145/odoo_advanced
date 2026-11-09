@@ -19,7 +19,6 @@ class StockPicking(models.Model):
     def button_validate(self):
         res = super().button_validate()
         for move in self:
-            print(234232, move.location_dest_id)
             if move.location_dest_id.usage == 'internal':
                 warehouse = move.location_dest_id.warehouse_id
                     # self.env['stock.warehouse'].search(
