@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+        <record model="ir.ui.view" id="view_task_form2_inherited">
+            <field name="name">project.task.form.inherited</field>
+            <field name="model">project.task</field>
+            <field name="inherit_id" ref="project.view_task_form2"/>
+            <field name="arch" type="xml">
+                <xpath expr="//group/field[@name='user_ids']" position="after">
+                    <field name="hours_per_day" widget="float_time"/>
+                </xpath>
+            </field>
+        </record>
+
+</odoo>
+
