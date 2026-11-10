@@ -5,8 +5,8 @@
         <field name="model">account.move</field>
         <field name="inherit_id" ref="account.view_move_form"/>
         <field name="arch" type="xml">
-            <sheet position="inside">
-                <div name="button_box">
+             <div name="button_box" class="oe_button_box" position="inside">
+
                     <button
                             name="action_view_delivery"
                             type="object"
@@ -15,10 +15,11 @@
                             invisible="delivery_count == 0"
                             groups="stock.group_stock_user"
                     >
+
                         <field name="delivery_count" widget="statinfo" string="Delivery"/>
                     </button>
-                </div>
-            </sheet>
+
+            </div>
         </field>
     </record>
 </odoo>

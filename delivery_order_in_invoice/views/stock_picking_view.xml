@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="invoice_field_view_picking_form" model="ir.ui.view">
+        <field name="name">stock.picking.form.inherit.for.invoice</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="sale_stock.view_picking_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='sale_id']" position="attributes">
+                <attribute name="invisible">not sale_id</attribute>
+            </xpath>
+            <xpath expr="//field[@name='sale_id']" position="after">
+                <field name="invoice_id" invisible="sale_id"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

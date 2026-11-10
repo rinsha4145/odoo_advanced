@@ -5,9 +5,10 @@
     'website': 'https://www.yourwebsite.com',
     'sequence': -10,
     'license': 'LGPL-3',
-    'depends': ['base','account','stock'],
+    'depends': ['base','account','stock','sale_stock'],
     'data': [
-        'views/account_move_view.xml'
+        'views/account_move_view.xml',
+        'views/stock_picking_view.xml'
     ],
     'application': False,
     'installable': True,

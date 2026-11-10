@@ -1,4 +1,5 @@
 from odoo import api, fields, models, tools
+from odoo.exceptions import UserError
 
 
 class AccountMove(models.Model):
@@ -9,9 +10,36 @@ class AccountMove(models.Model):
     delivery_count = fields.Integer(string='Delivery Orders', compute='_compute_picking_ids')
 
     def action_post(self):
-        context = self.env.context.copy()
-        if self.invoice_origin == False:
-            self.with_context(context)._action_confirm()
+        """inherit the action of confirm a invoice from there create a delivery if it has no sale order"""
+        for move in self:
+            if move.invoice_origin == False:
+                if move.move_type != 'out_invoice':
+                    raise UserError('Delivery Orders only created in invoice')
+                else:
+                    warehouse = move.env['stock.warehouse'].search([('company_id', '=', self.company_id.id)], limit=1)
+                    print(7890, move.name)
+                    picking_vals = {
+                        'picking_type_id': warehouse.out_type_id.id,
+                        'location_id': warehouse.lot_stock_id.id,
+                        'location_dest_id': move.partner_id.property_stock_customer.id,
+                        'partner_id': move.partner_id.id,
+                        'origin': move.name,
+                        'move_type': 'direct',
+                        'invoice_id': move.id,
+                        # 'date_deadline': self.invoice_due_date
+                    }
+                    picking = move.env['stock.picking'].create(picking_vals)
+                    for line in move.invoice_line_ids:
+                        print(456789, picking.location_dest_id)
+                        if line.product_id.type == 'consu':
+                            move_vals = {
+                                'product_id': line.product_id.id,
+                                'product_uom_qty': line.quantity,
+                                'picking_id': picking.id,
+                                'location_final_id': picking.location_dest_id.id,
+
+                            }
+                            self.env['stock.move'].create(move_vals)
         return super().action_post()
 
     @api.depends('picking_ids')
