@@ -7,8 +7,8 @@ OAUTH_RETURN_ROUTE = "/payment/payu/oauth/return"
 PARTNER_API_URL = "https://partner.payu.in"
 PAYMENT_API_LIVE_URL = "https://secure.payu.in"
 PAYMENT_API_TEST_URL = "https://test.payu.in"
-PAYMENT_RETURN_ROUTE = "/payment/payu/return"
-WEBHOOK_ROUTE = "/payment/payu/webhook"
+PAYMENT_RETURN_ROUTE = "/payment/payu2/return"
+WEBHOOK_ROUTE = "/payment/payu2/webhook"
 
 # The currencies supported by PayU, in ISO 4217 format.
 # PayU accounts are configured for a single settlement/display currency.

@@ -6,11 +6,10 @@
         <field name="inherit_id" ref="payment.payment_provider_form"/>
         <field name="arch" type="xml">
             <group name="provider_credentials" position="inside">
-                <group invisible="code != 'payu'">
-                    <field name="payu_api_key" string="API Key" required="code == 'payu' and state != 'disabled'"
+                <group invisible="code != 'payu2'">
+                    <field name="payu2_api_key" string="API Key" required="code == 'payu2' and state != 'disabled'"
                            password="True"/>
-<!--                    <field string="Merchant Salt" name="payu_merchant_salt_key" password="True"/>-->
-
+                    <field string="Merchant Salt" name="payu2_salt_key" password="True" required="code == 'payu2' and state != 'disabled'"/>
                 </group>
             </group>
         </field>

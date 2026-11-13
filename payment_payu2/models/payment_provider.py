@@ -1,131 +1,63 @@
-from odoo import fields, models,api
+from odoo import fields, models, api
 from odoo.addons.payment_payu2 import const
+from odoo.tools import urls
 from odoo.tools.urls import urljoin
-
+from urllib.parse import urlencode
 from odoo.exceptions import RedirectWarning, ValidationError
 from odoo.http import request
+
 from odoo.exceptions import ValidationError
 import hashlib
+
 
 class PaymentProvider(models.Model):
     _inherit = 'payment.provider'
 
     code = fields.Selection(
-        selection_add=[('payu', 'PayU')], ondelete={'payu': 'set default'}
+        selection_add=[('payu2', 'PayU2')], ondelete={'payu2': 'set default'}
     )
 
-    payu_api_key = fields.Char(
+    payu2_api_key = fields.Char(
         string="PayU API Key",
         help="The Test or Live API Key depending on the configuration of the provider",
-        required_if_provider='payu',
         copy=False,
 
     )
-    # payu_merchant_salt_key = fields.Char(
-    #     string="PayU Merchant Salt", copy=False
-    # )
+    payu2_salt_key = fields.Char(
+        string="PayU Merchant Salt", copy=False,
+        help="Help to generate a secure hash (signature) for authenticating and verifying transactions",
+    )
 
+    def _get_payu_url(self, state):
+        """get the url"""
+        if state == 'enabled':
+            return 'https://secure.payu.in'
+        else:
+            return 'https://test.payu.in'
 
-    @api.constrains("state")
-    def _check_payu_credentials_are_set_before_enabling(self):
-        """Check that the PayU credentials are valid when the provider is enabled.
-
-        :raise ValidationError: If the PayU credentials are not set
-        """
-        print(76787)
-        for provider in self.filtered(lambda p: p.code == "payu" and p.state != "disabled"):
-            if not provider.payu_api_key:
-                raise ValidationError(
-                    self.env._(
-                        'PayU credentials are missing. Click the "Connect" button to set up your'
-                        " account."
-                    )
-                )
-
-    def _build_request_url(
-            self, endpoint, *, is_proxy_request=False, payu_access_token=None, **kwargs
-    ):
+    def _build_request_url(self, endpoint, **kwargs):
         """Override of `payment` to build the request URL."""
-        if self.code != "payu":
-            return super()._build_request_url(
-                endpoint,
-                is_proxy_request=is_proxy_request,
-                payu_access_token=payu_access_token,
-                **kwargs,
-            )
+        if self.code != 'payu2':
+            return super()._build_request_url(endpoint, **kwargs)
+        base_url = self._get_payu_url(self.state)
 
-        if is_proxy_request:
-            return urljoin(const.OAUTH_URL, endpoint)
-
-        if payu_access_token:
-            return urljoin(const.PARTNER_API_URL, endpoint)
-
-        if self.state == "enabled":
-            base_url = const.PAYMENT_API_LIVE_URL
-        else:  # test
-            base_url = const.PAYMENT_API_TEST_URL
-        return urljoin(base_url, endpoint)
+        return urls.urljoin(base_url, endpoint)
 
     def _build_request_headers(self, *args, payu_access_token=None, **kwargs):
         """Override of `payment` to build the request headers."""
-        if self.code != "payu":
+        print(90909)
+        if self.code != "payu2":
+            print(1234321,payu_access_token)
+            print(11111,**kwargs)
             return super()._build_request_headers(
                 *args, payu_access_token=payu_access_token, **kwargs
             )
+
         return {"Authorization": f"Bearer {payu_access_token}"}
 
-    def action_start_onboarding(self, menu_id=None):
-        """Override of `payment` to redirect to the PayU OAuth URL.
-
-        Note: `self.ensure_one()`
-
-        :return: An URL action to redirect to the PayU OAuth URL
-        :rtype: dict
-        :raise RedirectWarning: If the company's currency is not supported
-        """
-        self.ensure_one()
-
-        if self.code != "payu":
-            return super().action_start_onboarding(menu_id=menu_id)
-
-        if self.company_id.currency_id.name not in const.SUPPORTED_CURRENCIES:
-            raise RedirectWarning(
-                self.env._(
-                    "PayU is not available in your country; please use another payment provider."
-                ),
-                self.env.ref("payment.action_payment_provider").id,
-                self.env._("Other Payment Providers"),
-            )
-
-        params = {
-            "provider_id": self.id,
-            "csrf_token": request.csrf_token(),
-            "return_url": urljoin(self.get_base_url(), const.OAUTH_RETURN_ROUTE),
-        }
-        authorization_url = f"{const.OAUTH_URL}/authorize?{urlencode(params)}"
-        return {"type": "ir.actions.act_url", "url": authorization_url, "target": "self"}
-
-    def _get_reset_values(self):
-        """Override of `payment` to supply the provider-specific credential values to reset."""
-        if self.code != "payu":
-            return super()._get_reset_values()
-
-        return {"payu_key_id": None, "payu_merchant_salt": None}
-
-        # === BUSINESS METHODS === #
-
-    def _payu_generate_signature(self, payment_data, incoming=False):
-        """Generate the signature for the provided payment data.
-
-        See: https://docs.payu.in/docs/hashing-request-and-response
-
-        :param dict payment_data: The payment data to sign
-        :param bool incoming: Whether the signature must be generated for an incoming (PayU to Odoo)
-                              or for outgoing (Odoo to PayU) communication
-        :return: The generated signature
-        :rtype: str
-        """
-        signature_data = {**payment_data, "salt": self.payu_merchant_salt}
+    def _payu2_generate_signature(self, payment_data, incoming=False):
+        """Generate the signature for the provided payment data. from salt"""
+        signature_data = {**payment_data, "salt": self.payu2_salt_key}
         signature_keys = const.SIGNATURE_KEYS["incoming" if incoming else "outgoing"]
         signature_string = "|".join(str(signature_data.get(field, "")) for field in signature_keys)
         return hashlib.sha512(signature_string.encode()).hexdigest().lower()
