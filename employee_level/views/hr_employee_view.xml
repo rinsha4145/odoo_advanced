@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<odoo>
+    <record id="hr_employee_view_form_inherit_expense" model="ir.ui.view">
+        <field name="name">hr.employee.view.form.expense</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+
+                      <button
+                            string="Promote"
+                            id="levelup"
+                            type="object"
+                            class="btn-primary"
+                            name="action_promote"
+                            invisible="is_highest_level == True "
+                    />
+
+            </xpath>
+             <xpath expr="//notebook" position="before">
+                 <group>
+
+                <field name="level_id" readonly="True" />
+                 </group>
+                 <group>
+
+                <field name="salary" readonly="True" />
+                 </group>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
