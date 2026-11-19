@@ -3,10 +3,6 @@
     <menuitem id="fleet_service_menu" name="Fleet Service" sequence="1"/>
     <menuitem id="service_order" name="Service order" parent="fleet_service_menu"
               action="action_fleet_service_order_template" sequence="1"/>
-
-<!--    <menuitem id="service_order_part" name="Part" parent="fleet_service_menu"-->
-<!--              action="action_fleet_service_order_part_template" sequence="4"/>-->
-<!--    <menuitem id="service_order_checklist" name="Checklist" parent="fleet_service_menu"-->
-<!--              action="action_fleet_service_order_checklist_template" sequence="3"/>-->
-
+<!--    <menuitem id="checklist_type" name="Checklist Type" parent="fleet_service_menu"-->
+<!--              action="action_checklist_type_template" sequence="2"/>-->
 </odoo>

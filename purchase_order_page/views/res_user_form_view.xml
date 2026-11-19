@@ -1,26 +1,39 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <odoo>
-       <record id="view_users_form_mail" model="ir.ui.view">
-            <field name="name">res.users.form.mail</field>
-            <field name="model">res.users</field>
-            <field name="inherit_id" ref="base.view_users_form"/>
-            <field name="arch" type="xml">
+    <record id="view_users_form_mail" model="ir.ui.view">
+        <field name="name">res.users.form.mail</field>
+        <field name="model">res.users</field>
+        <field name="inherit_id" ref="base.view_users_form"/>
+        <field name="arch" type="xml">
 
-             <xpath expr="//notebook" position="inside">
-            <page id="purchase_id" name="Purchase Order">
+            <xpath expr="//notebook" position="inside">
+                <page id="purchase_id" name="Purchase Order">
 
-                            <field name="purchase_order_ids"
-                            >
-<!--                                <list string="parts" editable="bottom">-->
-<!--                                    >-->
-<!--                                    <field name="product_id"/>-->
-<!--                                    <field name="quantity"/>-->
-<!--                                    <field name="unit_price"/>-->
+                    <field name="purchase_order_ids"
+                    >
+                        <!--                                <list string="parts" editable="bottom">-->
+                        <!--                                    >-->
+                        <!--                                    <field name="product_id"/>-->
+                        <!--                                    <field name="quantity"/>-->
+                        <!--                                    <field name="unit_price"/>-->
 
-<!--                                </list>-->
-                            </field>
-                        </page>
+                        <!--                                </list>-->
+                    </field>
+                </page>
             </xpath>
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button
+                        name="action_get_product_records"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-database"
+
+                >
+
+                    <field name="product_count" widget="statinfo" string="Product"/>
+                </button>
+            </xpath>
+
 
         </field>
     </record>

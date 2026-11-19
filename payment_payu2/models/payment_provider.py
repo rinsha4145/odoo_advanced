@@ -40,7 +40,7 @@ class PaymentProvider(models.Model):
         if self.code != 'payu2':
             return super()._build_request_url(endpoint, **kwargs)
         base_url = self._get_payu_url(self.state)
-
+        print(5555,base_url)
         return urls.urljoin(base_url, endpoint)
 
     def _build_request_headers(self, *args, payu_access_token=None, **kwargs):

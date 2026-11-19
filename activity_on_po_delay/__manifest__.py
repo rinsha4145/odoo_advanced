@@ -5,7 +5,7 @@
     'website': 'https://www.yourwebsite.com',
     'sequence': -10,
     'license': 'LGPL-3',
-    'depends': ['base', 'purchase','mail'],
+    'depends': ['base', 'purchase','mail','stock','purchase_stock'],
     'data': [
         'data/cron_activity_creation.xml',
         # 'views/'

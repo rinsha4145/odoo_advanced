@@ -3,7 +3,7 @@
 from types import MappingProxyType
 
 OAUTH_URL = "https://payu.api.odoo.com/api/payu/1"
-OAUTH_RETURN_ROUTE = "/payment/payu/oauth/return"
+OAUTH_RETURN_ROUTE = "/payment/payu2/oauth/return"
 PARTNER_API_URL = "https://partner.payu.in"
 PAYMENT_API_LIVE_URL = "https://secure.payu.in"
 PAYMENT_API_TEST_URL = "https://test.payu.in"
@@ -14,7 +14,7 @@ WEBHOOK_ROUTE = "/payment/payu2/webhook"
 # PayU accounts are configured for a single settlement/display currency.
 # Supporting additional currencies would require separate PayU account configurations, so only INR
 # is supported at this time.
-SUPPORTED_CURRENCIES = ["INR"]
+SUPPORTED_CURRENCIES = ["INR","USD"]
 
 # The codes of the default primary payment methods to activate
 DEFAULT_PAYMENT_METHOD_CODES = {

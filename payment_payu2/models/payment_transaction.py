@@ -16,6 +16,7 @@ class PaymentTransaction(models.Model):
         if self.provider_code != "payu2":
             return res
         base_url = self.provider_id.get_base_url()
+        print(67887788,base_url)
         return_url = urljoin(base_url, const.PAYMENT_RETURN_ROUTE)
         payload = {
             "key": self.provider_id.payu2_api_key,

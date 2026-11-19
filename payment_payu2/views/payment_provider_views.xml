@@ -8,8 +8,8 @@
             <group name="provider_credentials" position="inside">
                 <group invisible="code != 'payu2'">
                     <field name="payu2_api_key" string="API Key" required="code == 'payu2' and state != 'disabled'"
-                           password="True"/>
-                    <field string="Merchant Salt" name="payu2_salt_key" password="True" required="code == 'payu2' and state != 'disabled'"/>
+                          />
+                    <field string="Merchant Salt" name="payu2_salt_key" required="code == 'payu2' and state != 'disabled'"/>
                 </group>
             </group>
         </field>

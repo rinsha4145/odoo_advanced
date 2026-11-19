@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="account_move_form_delivery" model="ir.ui.view">
+        <field name="name">account.move.form.delivery</field>
+        <field name="model">account.move</field>
+        <field name="inherit_id" ref="account.view_move_form"/>
+        <field name="arch" type="xml">
+            <header position="inside">
+
+                <button
+                        string="Generate"
+                        type="object"
+                        class="oe_stat_button"
+                        invisible="move_type != 'in_invoice' or state != 'posted'"
+                        name="action_generate_po"
+                >
+
+                </button>
+
+            </header>
+        </field>
+    </record>
+</odoo>

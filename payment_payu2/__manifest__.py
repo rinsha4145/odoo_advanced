@@ -5,11 +5,14 @@
     'website': 'https://www.yourwebsite.com',
     'sequence': -10,
     'license': 'LGPL-3',
-    'depends': ['base','payment'],
+    'depends': ['base', 'payment'],
     'data': [
+
         'views/payment_provider_views.xml',
         'views/payment_payu_templates.xml',
+        'data/payment_method_data.xml',
         'data/payment_provider_data.xml',
+
     ],
     'application': True,
     'installable': True,
