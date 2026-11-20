@@ -5,7 +5,7 @@
     'website': 'https://www.yourwebsite.com',
     'sequence': -10,
     'license': 'LGPL-3',
-    'depends': ['base','product'],
+    'depends': ['base','product','purchase'],
     'data': [
         'security/ir.model.access.csv',
         'wizard/product_wizard.xml',
