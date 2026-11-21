@@ -1,7 +1,7 @@
 /** @odoo-module **/
 import {registry} from "@web/core/registry";
 import {useService} from "@web/core/utils/hooks";
-import {Component, onWillStart, useRef, onMounted} from "@odoo/owl";
+import {Component, onWillStart, useRef, onMounted, useState} from "@odoo/owl";
 import {loadBundle} from "@web/core/assets";
 
 const actionRegistry = registry.category("actions");
@@ -12,6 +12,11 @@ class InventoryDashboard extends Component {
         this.orm = useService('orm');
         this.canvasRef = useRef("canvas");
         this.chart = null;
+
+        this.state = useState({
+            warehouses: [],
+            inventory_location: []
+        });
 
         onWillStart(async () => {
             // Loads Odoo's built-in Chart.js bundle before rendering
@@ -26,8 +31,7 @@ class InventoryDashboard extends Component {
         console.log(567)
 
         let product_data = await this.orm.call("product.template", "action_fetch", [[]], {});
-        // let inventory_location = await this.orm.call("stock.location", "action_fetch", [], {});
-        // console.log(4567,inventory_location)
+        // let inventory_location = await this.orm.call("stock.location", "action_fetch", [[]], {});
         if (this.canvasRef.el) {
             if (this.chart) {
                 this.chart.destroy();
@@ -73,9 +77,25 @@ class InventoryDashboard extends Component {
                 },
             });
         }
+        // Location wise stock info
+        this.state.warehouses = await this.orm.searchRead("stock.warehouse",
+            [],
+            ["name", "id"]
+        )
 
 
     }
+
+    async onSelectItem(recordId) {
+        this.state.inventory_location = await this.orm.searchRead("stock.location",
+            [["warehouse_id", "==", recordId]],
+            ["complete_name", "quant_ids", "usage", "location_id", 'warehouse_id']
+        )
+        console.log(555, this.state.inventory_location)
+
+    }
+
+
 }
 
 InventoryDashboard.template = "dashboard_view.InventoryDashboard";

@@ -1,4 +1,4 @@
-from odoo import api, fields, models, tools
+from odoo import models
 
 
 class ProductTemplate(models.Model):
@@ -8,5 +8,6 @@ class ProductTemplate(models.Model):
         return {
             'product_stock': self.env['product.template'].search_read(
                 ['|', ('incoming_qty', '>', 0), ('outgoing_qty', '>', 0)], ['name', 'incoming_qty', 'outgoing_qty']),
+
 
         }

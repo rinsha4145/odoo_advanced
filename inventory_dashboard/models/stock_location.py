@@ -4,8 +4,10 @@ class ProductTemplate(models.Model):
     _inherit = 'stock.location'
 
     def action_fetch(self):
-        print(self[0].read())
+        print(234567)
+        print(123,self[0].read())
 
         return {
-            "yyyr":'fhbrfh'
+            "location":self.env['stock.location'].search_read(
+                [ ('quant_ids', '!=', False)], ['complete_name', 'quant_ids', 'warehouse_id']),
         }
