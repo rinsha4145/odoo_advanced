@@ -4,6 +4,6 @@
         <field name="name">Inventory Dashboard</field>
         <field name="tag">inventory_dashboard_tag</field>
     </record>
-    <menuitem name="Dashboard" id="inventory_dashboard" sequence="0"
+    <menuitem name="Dashboard" id="inventory_dashboard" sequence="-1"
               action="inventory_dashboard_action" parent="stock.menu_stock_root"/>
 </odoo>

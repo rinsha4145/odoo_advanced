@@ -5,7 +5,7 @@
     'website': 'https://www.yourwebsite.com',
     'sequence': -10,
     'license': 'LGPL-3',
-    'depends': ['base','stock','product'],
+    'depends': ['base','stock','product','stock'],
     'data': [
         # 'security/ir.model.access.csv',
         'views/dashboard_view.xml'
