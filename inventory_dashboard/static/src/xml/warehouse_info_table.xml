@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates>
+    <t t-name="dashboard_warehouse_info">
+        <div class="card shadow-sm">
+            <!-- Card Header with Title and Two Dropdowns -->
+            <div class="card-header d-flex justify-content-between align-items-center bg-white py-3">
+                <h5 class="card-title mb-0">Warehouse's Location information</h5>
+
+                <div class="d-flex gap-2">
+                    <!-- Warehouses Dropdown -->
+                    <div class="dropdown">
+                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1"
+                                data-bs-toggle="dropdown" aria-expanded="false">
+                            Warehouses
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                            <t t-foreach="this.state.warehouses" t-as="w" t-key="w_index">
+                                <li>
+                                    <a class="dropdown-item" href="#"
+                                       t-on-click.prevent="() => this.onSelectItem(w.id)">
+                                        <t t-esc="w.name"/>
+                                    </a>
+                                </li>
+                            </t>
+                            <li>
+                                <a class="dropdown-item" href="#" t-on-click.prevent="() => this.onSelectItem(false)">
+                                    None
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+
+                </div>
+            </div>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">SI No</th>
+                        <th scope="col">Location</th>
+                        <th scope="col">Parent Location</th>
+                        <th scope="col">Type</th>
+                        <!--                        <th scope="col">Stock</th>-->
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <t t-foreach="this.state.inventory_location" t-as="l" t-key="l_index">
+                        <tr>
+                            <td>
+                                <t t-esc="l_index + 1"/>
+                            </td>
+                            <td>
+                                <t t-esc="l.complete_name"/>
+                            </td>
+                            <td>
+                                <t t-esc="l.location_id"/>
+                            </td>
+                            <td>
+                                <t t-esc="l.usage"/>
+                            </td>
+                        </tr>
+                    </t>
+                </tbody>
+            </table>
+        </div>
+
+
+    </t>
+</templates>

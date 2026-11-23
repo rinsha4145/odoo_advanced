@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates>
+    <t t-name="dashboard_location_info">
+        <div class="card shadow-sm">
+            <!-- Card Header with Title and Two Dropdowns -->
+            <div class="card-header d-flex justify-content-between align-items-center bg-white py-3">
+                <h5 class="card-title mb-0">Location Information</h5>
+
+                <div class="d-flex gap-2">
+                    <!-- Warehouses Dropdown -->
+                    <div class="dropdown">
+                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownWarehouseButton"
+                                data-bs-toggle="dropdown" aria-expanded="false">
+                            Warehouses
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownWarehouseButton">
+                            <t t-foreach="this.state.warehouses" t-as="w" t-key="w_index">
+                                <li>
+                                    <a class="dropdown-item" href="#"
+                                       t-on-click.prevent="() => this.onselectWarehouse(w.id)">
+                                        <t t-esc="w.name"/>
+                                    </a>
+                                </li>
+                            </t>
+                        </ul>
+                    </div>
+
+                    <!-- Locations Dropdown -->
+                    <div class="dropdown">
+                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownLocationButton"
+                                data-bs-toggle="dropdown" aria-expanded="false">
+                            Locations
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownLocationButton">
+                            <t t-foreach="this.state.location" t-as="l" t-key="l_index">
+                                <li>
+                                    <a class="dropdown-item" href="#"
+                                       t-on-click.prevent="() => this.onselectLocation(l.id)">
+                                        <t t-esc="l.complete_name"/>
+                                    </a>
+                                </li>
+                            </t>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card Body with Responsive Table -->
+            <div class="card-body p-0">
+                <t t-if="this.state.location_data.data">
+                    <t t-esc="this.state.location_data.data.complete_name"/>
+                    <t t-esc="this.state.location_data.data.location_id"/>
+                    <t t-esc="this.state.location_data.data.usage"/>
+                    <t t-if="this.state.location_data.data.quant_ids">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th scope="col">SI No</th>
+                                    <th scope="col">product</th>
+                                    <th scope="col">Quantity</th>
+                                    <th scope="col">Reserved Quantity</th>
+                                    <th scope="col">lot_id</th>
+                                    <th scope="col">product_uom_id</th>
+                                    <!--                        <th scope="col">Stock</th>-->
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                <t t-foreach="this.state.location_data.quants" t-as="l" t-key="l_index">
+                                    <tr>
+                                        <td>
+                                            <t t-esc="l_index + 1"/>
+                                        </td>
+                                        <td>
+                                            <t t-esc="l.product_id"/>
+                                        </td>
+                                        <td>
+                                            <t t-esc="l.quantity"/>
+                                        </td>
+                                        <td>
+                                            <t t-esc="l.reserved_quantity"/>
+                                        </td>
+                                        <td>
+                                            <t t-esc="l.lot_id"/>
+                                        </td>
+                                        <td>
+                                            <t t-esc="l.product_uom_id"/>
+                                        </td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
+                    </t>
+                </t>
+                <t t-else="">
+                    <p>no data</p>
+                </t>
+
+            </div>
+        </div>
+    </t>
+</templates>

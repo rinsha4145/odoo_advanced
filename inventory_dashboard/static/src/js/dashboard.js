@@ -15,7 +15,9 @@ class InventoryDashboard extends Component {
 
         this.state = useState({
             warehouses: [],
-            inventory_location: []
+            location: [],
+            inventory_location: [],
+            location_data: {},
         });
 
         onWillStart(async () => {
@@ -30,7 +32,12 @@ class InventoryDashboard extends Component {
     async _fetch_data() {
         console.log(567)
 
-        let product_data = await this.orm.call("product.template", "action_fetch", [[]], {});
+        let product_data = await this.orm.call("inventory.dashboard", "action_fetch", [[]], {});
+        // fetch all warehouses
+        this.state.warehouses = await this.orm.searchRead("stock.warehouse",
+            [],
+            ["name", "id"]
+        )
         // let inventory_location = await this.orm.call("stock.location", "action_fetch", [[]], {});
         if (this.canvasRef.el) {
             if (this.chart) {
@@ -38,6 +45,11 @@ class InventoryDashboard extends Component {
             }
         }
         const chartLabels = product_data.product_stock;
+        const avg_expense_product = product_data.avg_expense_by_product
+        const picking_type = product_data.picking_group
+        const internal_transfer_move = product_data.internal_transfer_move
+        console.log(999,internal_transfer_move)
+
         const data = [{
             'chart_id': 'product_incoming_chart',
             'type': 'bar',
@@ -52,10 +64,32 @@ class InventoryDashboard extends Component {
             'data': chartLabels.filter((v) => v.outgoing_qty > 0).map(item => item.outgoing_qty),
             'labels': chartLabels.filter((v) => v.outgoing_qty > 0).map(item => item.name),
             'text': 'Product Outgoing Stock'
+        }, {
+            'chart_id': 'avg_product_cost',
+            'type': 'pie',
+            'label': 'Products',
+            'data': avg_expense_product.map(item => item.cost),
+            'labels': avg_expense_product.filter((v) => v.product_id !== false).map(item => item.product_id),
+            'text': 'Average Expense of A product'
+        }, {
+            'chart_id': 'group_by_picking_type',
+            'type': 'pie',
+            'label': 'Transfer Count',
+            'data': picking_type.map(item => item[1]),
+            'labels': picking_type.map(item => item[0]),
+            'text': 'Transfer Count By Picking Type'
+        },{
+            'chart_id': 'internal_tranfer_product_count',
+            'type': 'pie',
+            'label': 'Transfer Count',
+            'data': picking_type.map(item => item[1]),
+            'labels': picking_type.map(item => item[0]),
+            'text': 'Transfer Count By Picking Type'
         }]
+
         for (const i of data) {
             new Chart(i.chart_id, {
-                type: i.type,
+                type:   i.type,
                 data: {
                     labels: i.labels,
                     datasets: [{
@@ -77,22 +111,52 @@ class InventoryDashboard extends Component {
                 },
             });
         }
-        // Location wise stock info
-        this.state.warehouses = await this.orm.searchRead("stock.warehouse",
-            [],
-            ["name", "id"]
-        )
-
 
     }
 
+// Warehouse and its location
     async onSelectItem(recordId) {
         this.state.inventory_location = await this.orm.searchRead("stock.location",
-            [["warehouse_id", "==", recordId]],
+            [["warehouse_id", "=", recordId], ["quant_ids", '!=', false]],
             ["complete_name", "quant_ids", "usage", "location_id", 'warehouse_id']
         )
-        console.log(555, this.state.inventory_location)
+        // const allQuantIds = this.state.inventory_location.flatMap((loc) => loc.quant_ids);
 
+        // const quants = await this.orm.read(
+        //     "stock.quant",
+        //     allQuantIds,
+        //     ["product_id", "quantity", "available_quantity", "location_id"]
+        // );
+        // this.state.inventory_location = await this.orm.call("inventory.dashboard", "action_fetch", [[]],  { recordId: parseInt(recordId) });
+        return {
+            'location': this.state.inventory_location,
+
+        }
+
+    }
+
+// Location wise stock info
+    async onselectWarehouse(recordId) {
+        this.state.location = await this.orm.searchRead("stock.location",
+            [["warehouse_id", "=", recordId], ["usage", '=', 'internal']], []
+                ["complete_name"]
+        )
+    }
+
+    async onselectLocation(recordId) {
+        const location = await this.orm.searchRead("stock.location",
+            [["id", "=", recordId]], []
+        )
+        const quants = await this.orm.searchRead(
+            "stock.quant",
+            [["id", "in", location[0]?.quant_ids]],
+            ["product_id", "quantity", "reserved_quantity", "lot_id", "product_uom_id"]
+        );
+        this.state.location_data =
+            {
+                'data': location[0],
+                'quants': quants
+            }
     }
 
 

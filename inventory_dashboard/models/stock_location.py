@@ -8,6 +8,5 @@ class ProductTemplate(models.Model):
         print(123,self[0].read())
 
         return {
-            "location":self.env['stock.location'].search_read(
-                [ ('quant_ids', '!=', False)], ['complete_name', 'quant_ids', 'warehouse_id']),
+
         }

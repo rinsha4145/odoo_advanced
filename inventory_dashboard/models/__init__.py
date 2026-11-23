@@ -1,2 +1,2 @@
-from . import product_template
+from . import inventory_dashboard
 from . import stock_location
