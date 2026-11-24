@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <templates>
     <t t-name="dashboard_location_info">
-        <div class="card shadow-sm">
+        <div class="card shadow-sm h-100">
             <!-- Card Header with Title and Two Dropdowns -->
-            <div class="card-header d-flex justify-content-between align-items-center bg-white py-3">
-                <h5 class="card-title mb-0">Location Information</h5>
+            <div class="card-header d-flex flex-wrap justify-content-between align-items-center gap-2 bg-white py-3">
+                <h5 class="card-title mb-0 fw-bold">Location Information</h5>
 
-                <div class="d-flex gap-2">
+                <div class="d-flex flex-wrap align-items-center gap-2">
                     <!-- Warehouses Dropdown -->
                     <div class="dropdown">
                         <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownWarehouseButton"
@@ -48,54 +48,63 @@
             <!-- Card Body with Responsive Table -->
             <div class="card-body p-0">
                 <t t-if="this.state.location_data.data">
-                    <t t-esc="this.state.location_data.data.complete_name"/>
-                    <t t-esc="this.state.location_data.data.location_id"/>
-                    <t t-esc="this.state.location_data.data.usage"/>
+                    <div class="d-flex flex-wrap align-items-center gap-3 px-3 py-2 bg-light border-bottom small">
+                        <span>
+                            <t t-esc="this.state.location_data.data.complete_name"/>
+                        </span>
+                        <span>
+                            <t t-esc="this.state.location_data.data.location_id"/>
+                        </span>
+                        <span>
+                            <t t-esc="this.state.location_data.data.usage"/>
+                        </span>
+                    </div>
                     <t t-if="this.state.location_data.data.quant_ids">
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th scope="col">SI No</th>
-                                    <th scope="col">product</th>
-                                    <th scope="col">Quantity</th>
-                                    <th scope="col">Reserved Quantity</th>
-                                    <th scope="col">lot_id</th>
-                                    <th scope="col">product_uom_id</th>
-                                    <!--                        <th scope="col">Stock</th>-->
-                                </tr>
-                            </thead>
+                        <div class="table-responsive"  style="max-height: 300px; overflow-y: auto;">
+                            <table class=" table table-hover table-striped align-middle mb-0">
 
-                            <tbody>
-                                <t t-foreach="this.state.location_data.quants" t-as="l" t-key="l_index">
+                                <thead class="table-light">
                                     <tr>
-                                        <td>
-                                            <t t-esc="l_index + 1"/>
-                                        </td>
-                                        <td>
-                                            <t t-esc="l.product_id"/>
-                                        </td>
-                                        <td>
-                                            <t t-esc="l.quantity"/>
-                                        </td>
-                                        <td>
-                                            <t t-esc="l.reserved_quantity"/>
-                                        </td>
-                                        <td>
-                                            <t t-esc="l.lot_id"/>
-                                        </td>
-                                        <td>
-                                            <t t-esc="l.product_uom_id"/>
-                                        </td>
+                                        <th scope="col" class="ps-3">SI No</th>
+                                        <th scope="col">product</th>
+                                        <th scope="col" class="text-end">Quantity</th>
+                                        <th scope="col" class="text-end">Reserved Quantity</th>
+                                        <th scope="col">lot_id</th>
+                                        <th scope="col" class="ps-3">product_uom_id</th>
                                     </tr>
-                                </t>
-                            </tbody>
-                        </table>
+                                </thead>
+
+                                <tbody>
+                                    <t t-foreach="this.state.location_data.quants" t-as="l" t-key="l_index">
+                                        <tr>
+                                            <td>
+                                                <t t-esc="l_index + 1"/>
+                                            </td>
+                                            <td>
+                                                <t t-esc="l.product_id"/>
+                                            </td>
+                                            <td>
+                                                <t t-esc="l.quantity"/>
+                                            </td>
+                                            <td>
+                                                <t t-esc="l.reserved_quantity"/>
+                                            </td>
+                                            <td>
+                                                <t t-esc="l.lot_id"/>
+                                            </td>
+                                            <td>
+                                                <t t-esc="l.product_uom_id"/>
+                                            </td>
+                                        </tr>
+                                    </t>
+                                </tbody>
+                            </table>
+                        </div>
                     </t>
                 </t>
                 <t t-else="">
-                    <p>no data</p>
+                    <p class="text-center text-muted py-4 mb-0">No Data</p>
                 </t>
-
             </div>
         </div>
     </t>

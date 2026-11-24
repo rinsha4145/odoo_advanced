@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <t t-name="dashboard_filtering">
+        <div class="d-flex flex-wrap align-items-center gap-3 p-3 ">
+
+            <!-- Sort By Filter -->
+            <div class="d-flex align-items-center gap-2">
+                <label for="sort_by_select" class="form-label mb-0 fw-semibold text-nowrap">Sort by:</label>
+                <select id="sort_by_select"
+                        class="form-select form-select-sm"
+                        style="min-width: 140px;"
+                        t-on-change="(ev) => this.updateOperator(ev.target.value)">
+                    <option value="">Year</option>
+                    <t t-foreach="this.state.filtering.years" t-as="y" t-key="y_index">
+                        <option t-att-selected="y_index == this.state.filtering.selectedYear"
+                                t-att-value="y">
+                            <t t-out="y"/>
+                        </option>
+                    </t>
+                </select>
+            </div>
+
+            <!-- Dynamic Value Filter -->
+            <t t-if="this.state.filtering.months">
+                <div class="d-flex align-items-center gap-2">
+                    <label for="value_select" class="form-label mb-0 fw-semibold text-nowrap">Select:</label>
+                    <select id="value_select"
+                            class="form-select form-select-sm"
+                            style="min-width: 140px;"
+                            t-on-change="(ev) => this.onselectFilter(ev.target.value)">
+                        <option value="">All Months</option>
+
+                        <t t-foreach="this.state.filtering.months" t-as="v" t-key="v_index">
+                            <option t-att-selected="v_index == this.state.filtering.selectedMonth"
+                                    t-att-value="v_index">
+                                <t t-out="v"/>
+                            </option>
+                        </t>
+                    </select>
+                </div>
+            </t>
+
+
+        </div>
+    </t>
+</templates>

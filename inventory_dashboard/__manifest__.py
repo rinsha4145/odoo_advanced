@@ -21,6 +21,7 @@
             'inventory_dashboard/static/src/xml/dashboard_cards.xml',
             'inventory_dashboard/static/src/xml/warehouse_info_table.xml',
             'inventory_dashboard/static/src/xml/location_stock_info.xml',
+            'inventory_dashboard/static/src/xml/filtering.xml',
         ],
 
     },

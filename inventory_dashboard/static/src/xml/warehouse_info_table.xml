@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <templates>
     <t t-name="dashboard_warehouse_info">
-        <div class="card shadow-sm">
+        <div class="card shadow-sm h-100">
             <!-- Card Header with Title and Two Dropdowns -->
             <div class="card-header d-flex justify-content-between align-items-center bg-white py-3">
-                <h5 class="card-title mb-0">Warehouse's Location information</h5>
+                <h5 class="card-title mb-0 fw-bold">Warehouse's Location information</h5>
 
-                <div class="d-flex gap-2">
+                <div class="d-flex flex-wrap align-items-center gap-2">
                     <!-- Warehouses Dropdown -->
                     <div class="dropdown">
                         <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1"
@@ -32,36 +32,42 @@
 
                 </div>
             </div>
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th scope="col">SI No</th>
-                        <th scope="col">Location</th>
-                        <th scope="col">Parent Location</th>
-                        <th scope="col">Type</th>
-                        <!--                        <th scope="col">Stock</th>-->
-                    </tr>
-                </thead>
+            <t t-if="this.state.inventory_location[0]">
+                <div class="table-responsive"  style="max-height: 300px; overflow-y: auto;">
+                    <table class=" table table-hover table-striped align-middle mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th scope="col" class="ps-3">SI No</th>
+                                <th scope="col" class="text-center">Location</th>
+                                <th scope="col" class="text-center">Parent Location</th>
+                                <th scope="col">Type</th>
+                            </tr>
+                        </thead>
 
-                <tbody>
-                    <t t-foreach="this.state.inventory_location" t-as="l" t-key="l_index">
-                        <tr>
-                            <td>
-                                <t t-esc="l_index + 1"/>
-                            </td>
-                            <td>
-                                <t t-esc="l.complete_name"/>
-                            </td>
-                            <td>
-                                <t t-esc="l.location_id"/>
-                            </td>
-                            <td>
-                                <t t-esc="l.usage"/>
-                            </td>
-                        </tr>
-                    </t>
-                </tbody>
-            </table>
+                        <tbody>
+                            <t t-foreach="this.state.inventory_location" t-as="l" t-key="l_index">
+                                <tr>
+                                    <td>
+                                        <t t-esc="l_index + 1"/>
+                                    </td>
+                                    <td>
+                                        <t t-esc="l.complete_name"/>
+                                    </td>
+                                    <td>
+                                        <t t-esc="l.location_id"/>
+                                    </td>
+                                    <td>
+                                        <t t-esc="l.usage"/>
+                                    </td>
+                                </tr>
+                            </t>
+                        </tbody>
+                    </table>
+                </div>
+            </t>
+            <t t-else="">
+                <p class="text-center text-muted py-4 mb-0">No Data</p>
+            </t>
         </div>
 
 
