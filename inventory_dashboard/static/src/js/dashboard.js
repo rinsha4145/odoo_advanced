@@ -20,31 +20,42 @@ class InventoryDashboard extends Component {
 
         });
         this.orm = useService('orm');
-        // this.canvasRef = useRef("canvas");
+        this.action = useService("action");
         this.chart = [];
         this.sort = {}
         this.startDate = false
         this.endDate = false
-        //get the past 5 year from current year
         const {DateTime} = luxon;
         const currentYear = DateTime.now().year;
-        this.state.filtering.years = Array.from({length: 5}, (_, i) => currentYear - i);
+        this.state.filtering.years = Array.from({length: 5}, (_, i) => currentYear - i);//get the past 5 year from current year
+
         useEffect(
             () => {
                 const fetchData = async () => {
                     await this._fetch_data();
                 };
                 fetchData();
+
             },
-            () => [this.state.sort.month]
+            () => [this.state.sort.year, this.state.sort.month]
         );
-
-
         onWillStart(async () => {
             // Loads Odoo's built-in Chart.js bundle before rendering
             await loadBundle("web.chartjs_lib");
         });
 
+    }
+
+    async openCharts(model) {
+        console.log(34,model)
+        await this.action.doAction({
+            type: "ir.actions.act_window",
+            res_model: model,
+            view_id:'stock.product_product_stock_tree',
+            views: [[false, "list"]],
+
+            target: "current",
+        });
     }
 
     async updateOperator(value) {
@@ -150,16 +161,16 @@ class InventoryDashboard extends Component {
                 },
             });
             this.chart.push(chart)
-
         }
     }
 
 // Warehouse and its location
     async onSelectItem(recordId) {
-
-        this.state.inventory_location = await this.orm.searchRead("stock.location",
-            [["warehouse_id", "=", recordId], ['create_date', '<=', this.startDate], ['create_date', '>=', this.endDate]],
-            ["complete_name", "quant_ids", "usage", "location_id", 'warehouse_id']
+        this.state.inventory_location = await this.orm.call(
+            "inventory.dashboard",
+            "fetch_location",
+            [[]],
+            {date: this.state.sort, id: recordId}
         )
     }
 
@@ -172,19 +183,13 @@ class InventoryDashboard extends Component {
     }
 
     async onselectLocation(recordId) {
-        const location = await this.orm.searchRead("stock.location",
-            [["id", "=", recordId], ['create_date', '<=', this.startDate], ['create_date', '>=', this.endDate]], []
+        this.state.location_data = await this.orm.call(
+            "inventory.dashboard",
+            "fetch_location_Datas",
+            [[]],
+            {date: this.state.sort, id: recordId}
         )
-        const quants = await this.orm.searchRead(
-            "stock.quant",
-            [["id", "in", location[0]?.quant_ids], ['create_date', '<=', this.startDate], ['create_date', '>=', this.endDate]],
-            ["product_id", "quantity", "reserved_quantity", "lot_id", "product_uom_id"]
-        )
-        this.state.location_data =
-            {
-                'data': location[0],
-                'quants': quants
-            }
+        console.log(1234, this.state.location_data)
     }
 }
 

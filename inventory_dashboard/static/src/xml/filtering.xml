@@ -10,9 +10,9 @@
                         class="form-select form-select-sm"
                         style="min-width: 140px;"
                         t-on-change="(ev) => this.updateOperator(ev.target.value)">
-                    <option value="">Year</option>
+                    <option value="0">All Years</option>
                     <t t-foreach="this.state.filtering.years" t-as="y" t-key="y_index">
-                        <option t-att-selected="y == this.state.filtering.selectedYear"
+                        <option
                                 t-att-value="y">
                             <t t-out="y"/>
                         </option>
@@ -28,10 +28,10 @@
                             class="form-select form-select-sm"
                             style="min-width: 140px;"
                             t-on-change="(ev) => this.onselectFilter(ev.target.value)">
-                        <option value="">All Months</option>
+                        <option value="0">All Months</option>
 
                         <t t-foreach="this.state.filtering.months" t-as="v" t-key="v_index">
-                            <option t-att-selected="v_index+1 == this.state.filtering.selectedMonth"
+                            <option
                                     t-att-value="v_index+1">
                                 <t t-out="v"/>
                             </option>
