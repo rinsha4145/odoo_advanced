@@ -1,7 +1,7 @@
 /** @odoo-module **/
 import {registry} from "@web/core/registry";
 import {useService} from "@web/core/utils/hooks";
-import {Component, onWillStart, useRef, onRe, useState} from "@odoo/owl";
+import {Component, onWillStart, useRef, onMounted, useState, onRendered, useEffect} from "@odoo/owl";
 import {loadBundle} from "@web/core/assets";
 import {serializeDateTime} from "@web/core/l10n/dates";
 
@@ -30,16 +30,28 @@ class InventoryDashboard extends Component {
         const {DateTime} = luxon;
         const currentYear = DateTime.now().year;
         this.state.filtering.years = Array.from({length: 5}, (_, i) => currentYear - i);
+        useEffect(
+            () => {
+                const fetchData = async () => {
+                    this.state.product_data = await this.orm.call(
+                        "inventory.dashboard",
+                        "action_fetch",
+                        [[]],
+                        {date: this.state.sort}
+                    );
+                    this._fetch_data();
+                };
+                fetchData();
+            },
+            () => [this.state.sort.month]
+        );
 
 
         onWillStart(async () => {
             // Loads Odoo's built-in Chart.js bundle before rendering
             await loadBundle("web.chartjs_lib");
         });
-        onRendered(async () => {
-            this.state.product_data = await this.orm.call("inventory.dashboard", "action_fetch", [[]], {date: this.state.sort});
-            this._fetch_data();
-        });
+
     }
 
     async updateOperator(value) {
@@ -49,6 +61,7 @@ class InventoryDashboard extends Component {
 
     async onselectFilter(value) {
         this.state.sort.month = parseInt(value)
+        console.log(1, this.state.sort)
     }
 
     async _fetch_data() {
@@ -59,10 +72,10 @@ class InventoryDashboard extends Component {
             ["name", "id"]
         )
         // let inventory_location = await this.orm.call("stock.location", "action_fetch", [[]], {});
-        if (this.canvasRef.el) {
-            if (this.chart) {
-                this.chart.destroy();
-            }
+
+        if (this.chart) {
+            console.log(1111, this.chart)
+            this.chart.destroy();
         }
         const chartLabels = this.state.product_data.product_stock;
         const avg_expense_product = this.state.product_data.avg_expense_by_product
@@ -116,7 +129,7 @@ class InventoryDashboard extends Component {
         }]
 
         for (const i of data) {
-            new Chart(i.chart_id, {
+            this.chart = new Chart(i.chart_id, {
                 type: i.type,
                 data: {
                     labels: i.labels,
@@ -144,7 +157,6 @@ class InventoryDashboard extends Component {
 
 // Warehouse and its location
     async onSelectItem(recordId) {
-        console.log(789, this.startDate)
 
         this.state.inventory_location = await this.orm.searchRead("stock.location",
             [["warehouse_id", "=", recordId], ['create_date', '<=', this.startDate], ['create_date', '>=', this.endDate]],
