@@ -1,9 +1,9 @@
 /** @odoo-module **/
 import {registry} from "@web/core/registry";
 import {useService} from "@web/core/utils/hooks";
-import {Component, onWillStart, useRef, onMounted, useState} from "@odoo/owl";
+import {Component, onWillStart, useRef, onRe, useState} from "@odoo/owl";
 import {loadBundle} from "@web/core/assets";
-import {serializeDateTime,formatDate} from "@web/core/l10n/dates";
+import {serializeDateTime} from "@web/core/l10n/dates";
 
 const actionRegistry = registry.category("actions");
 
@@ -11,7 +11,8 @@ class InventoryDashboard extends Component {
     setup() {
         super.setup();
         this.state = useState({
-            // sort: {},// the month,year from filter
+            sort: {year: false, month: false},// the month,year from filter
+            product_data: null,
             filtering: {},// the data used for filtering
             warehouses: [], // all warehouses
             location: [],
@@ -35,35 +36,23 @@ class InventoryDashboard extends Component {
             // Loads Odoo's built-in Chart.js bundle before rendering
             await loadBundle("web.chartjs_lib");
         });
-        onMounted(() => {
+        onRendered(async () => {
+            this.state.product_data = await this.orm.call("inventory.dashboard", "action_fetch", [[]], {date: this.state.sort});
             this._fetch_data();
         });
     }
 
     async updateOperator(value) {
-        this.sort.year = parseInt(value)
+        this.state.sort.year = parseInt(value)
         this.state.filtering.months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
     }
 
     async onselectFilter(value) {
-        this.sort.month = parseInt(value)
-        console.log(456, this.sort)
-        const {DateTime} = luxon;
-
-        const start = DateTime.utc(this.sort.year, this.sort.month + 1, 1, 0, 0, 0);
-        this.startDate = formatDate(serializeDateTime(start))
-        const end = DateTime.utc(this.sort.year, this.sort.month + 0, 23, 59, 59);
-
-        this.endDate = formatDate(serializeDateTime(end))
-
-
+        this.state.sort.month = parseInt(value)
     }
-
 
     async _fetch_data() {
         console.log(567)
-
-        let product_data = await this.orm.call("inventory.dashboard", "action_fetch", [[]], {});
         // fetch all warehouses
         this.state.warehouses = await this.orm.searchRead("stock.warehouse",
             [],
@@ -75,10 +64,10 @@ class InventoryDashboard extends Component {
                 this.chart.destroy();
             }
         }
-        const chartLabels = product_data.product_stock;
-        const avg_expense_product = product_data.avg_expense_by_product
-        const picking_type = product_data.picking_group
-        const internal_transfer_move = product_data.internal_transfer_move
+        const chartLabels = this.state.product_data.product_stock;
+        const avg_expense_product = this.state.product_data.avg_expense_by_product
+        const picking_type = this.state.product_data.picking_group
+        const internal_transfer_move = this.state.product_data.internal_transfer_move
 
         const data = [{
             'chart_id': 'product_incoming_chart',

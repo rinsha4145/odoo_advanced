@@ -1,25 +1,57 @@
 from odoo import models, fields
+from datetime import datetime
 
 
 class InventoryDashboard(models.Model):
     _name = 'inventory.dashboard'
 
-    def inventory_dashboard_filtering_data(self, value):
-        print(3456, value)
-        today = fields.Date.today()
+    def date_fetch(self, date):
+        if date.get('year') != False:
+            base_dt = datetime(date.get('year'), date.get('month'), 1)
+            start_dt = fields.Datetime.start_of(base_dt, 'month')
+            end_dt = fields.Datetime.end_of(base_dt, 'month')
+            return [
+                ('create_date', '<=', start_dt), ('create_date', '>=', end_dt)
+            ]
 
-    def action_fetch(self):
-        # stock incoming &outgoing by product wise
-        product_stock = self.env['product.template'].search_read(
-            ['|', ('incoming_qty', '>', 0), ('outgoing_qty', '>', 0)], ['name', 'incoming_qty', 'outgoing_qty'])
+        return False
 
+    def action_fetch(self, date):
+
+        domain = self.date_fetch(date)
+        if domain:
+            # stock incoming &outgoing by product wise
+            print(56, domain)
+            product_stock = self.env['product.template'].search_read(
+
+                domain + ['|', ('incoming_qty', '>', 0), ('outgoing_qty', '>', 0)],
+                ['name', 'incoming_qty', 'outgoing_qty'])
+            # Group based on picking type
+            picking_group = self.env['stock.picking']._read_group(
+                [('state', 'not in', ['cancel'])] + domain, ['picking_type_id.code'], ['__count']
+
+            )
+        else:
+            product_stock = self.env['product.template'].search_read(
+                ['|', ('incoming_qty', '>', 0), ('outgoing_qty', '>', 0)],
+                ['name', 'incoming_qty', 'outgoing_qty'])
+            # Group based on picking type
+            picking_group = self.env['stock.picking']._read_group(
+                [('state', 'not in', ['cancel'])], ['picking_type_id.code'], ['__count']
+
+            )
         # Average expense of  a product(purchase cost + landed cost)
         products = self.env['product.product'].search([])
         stock_valuation = self.env['stock.valuation.adjustment.lines'].sudo()
         avg_expense_by_product = []
         for product in products:
-            result = stock_valuation.search(
-                [('product_id', '=', product.id), ('quantity', '>', 0), ("additional_landed_cost", "!=", False)])
+            if domain:
+                result = stock_valuation.search(
+                    [('product_id', '=', product.id), ('quantity', '>', 0),
+                     ("additional_landed_cost", "!=", False)] + domain)
+            else:
+                result = stock_valuation.search(
+                    [('product_id', '=', product.id), ('quantity', '>', 0), ("additional_landed_cost", "!=", False)])
             total_qty = sum(result.mapped('quantity'))
             total_cost = sum(result.mapped('final_cost'))
             avg_expense_cost = total_cost / total_qty if total_qty else 0.0
@@ -29,15 +61,8 @@ class InventoryDashboard(models.Model):
                     'cost': round(avg_expense_cost, 2)
                 })
 
-        # Group based on picking type
-        picking_group = self.env['stock.picking']._read_group(
-            [('state', 'not in', ['cancel'])], ['picking_type_id.code'], ['__count']
-
-        )
-
         # Internal transfers(Product wise)
         if self.env.user.has_group('stock.group_stock_manager'):
-
             internal_transfer_move = self.env['stock.move']._read_group(
                 [('state', '=', 'done'), ('picking_type_id.code', '=', 'internal')],
                 ['product_id.name'], ['quantity:sum']

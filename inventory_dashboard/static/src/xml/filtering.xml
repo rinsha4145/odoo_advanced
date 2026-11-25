@@ -12,10 +12,11 @@
                         t-on-change="(ev) => this.updateOperator(ev.target.value)">
                     <option value="">Year</option>
                     <t t-foreach="this.state.filtering.years" t-as="y" t-key="y_index">
-                        <option t-att-selected="y_index == this.state.filtering.selectedYear"
+                        <option t-att-selected="y == this.state.filtering.selectedYear"
                                 t-att-value="y">
                             <t t-out="y"/>
                         </option>
+                        <t t-log="this.state.filtering.selectedYear"/>
                     </t>
                 </select>
             </div>
@@ -31,8 +32,8 @@
                         <option value="">All Months</option>
 
                         <t t-foreach="this.state.filtering.months" t-as="v" t-key="v_index">
-                            <option t-att-selected="v_index == this.state.filtering.selectedMonth"
-                                    t-att-value="v_index">
+                            <option t-att-selected="v_index+1 == this.state.filtering.selectedMonth"
+                                    t-att-value="v_index+1">
                                 <t t-out="v"/>
                             </option>
                         </t>
