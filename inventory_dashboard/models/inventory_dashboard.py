@@ -6,14 +6,14 @@ class InventoryDashboard(models.Model):
     _name = 'inventory.dashboard'
 
     def date_fetch(self, date):
-        if date.get('year') != False:
+        if date.get('year') != False and date.get('month') != False:
             base_dt = datetime(date.get('year'), date.get('month'), 1)
             start_dt = fields.Datetime.start_of(base_dt, 'month')
             end_dt = fields.Datetime.end_of(base_dt, 'month')
             return [
-                ('create_date', '<=', start_dt), ('create_date', '>=', end_dt)
+                '&',('create_date', '<=', start_dt), ('create_date', '>=', end_dt)
             ]
-
+        # elif date.get('year') != False and date.get('month') == False:
         return False
 
     def action_fetch(self, date):
@@ -23,12 +23,11 @@ class InventoryDashboard(models.Model):
             # stock incoming &outgoing by product wise
             print(56, domain)
             product_stock = self.env['product.template'].search_read(
-
-                domain + ['|', ('incoming_qty', '>', 0), ('outgoing_qty', '>', 0)],
+                ['|', ('incoming_qty', '>', 0), ('outgoing_qty', '>', 0)].append(domain),
                 ['name', 'incoming_qty', 'outgoing_qty'])
             # Group based on picking type
             picking_group = self.env['stock.picking']._read_group(
-                [('state', 'not in', ['cancel'])] + domain, ['picking_type_id.code'], ['__count']
+                [('state', 'not in', ['cancel'])], ['picking_type_id.code'], ['__count']
 
             )
         else:
@@ -45,13 +44,14 @@ class InventoryDashboard(models.Model):
         stock_valuation = self.env['stock.valuation.adjustment.lines'].sudo()
         avg_expense_by_product = []
         for product in products:
+            base_domain = [('product_id', '=', product.id), ('quantity', '>', 0),
+                           ("additional_landed_cost", "!=", False)]
             if domain:
-                result = stock_valuation.search(
-                    [('product_id', '=', product.id), ('quantity', '>', 0),
-                     ("additional_landed_cost", "!=", False)] + domain)
+                result = stock_valuation.search(base_domain + domain)
+                print(678, result)
+
             else:
-                result = stock_valuation.search(
-                    [('product_id', '=', product.id), ('quantity', '>', 0), ("additional_landed_cost", "!=", False)])
+                result = stock_valuation.search(base_domain)
             total_qty = sum(result.mapped('quantity'))
             total_cost = sum(result.mapped('final_cost'))
             avg_expense_cost = total_cost / total_qty if total_qty else 0.0

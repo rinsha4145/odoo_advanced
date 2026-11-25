@@ -1,9 +1,8 @@
 /** @odoo-module **/
 import {registry} from "@web/core/registry";
 import {useService} from "@web/core/utils/hooks";
-import {Component, onWillStart, useRef, onMounted, useState, onRendered, useEffect} from "@odoo/owl";
+import {Component, onWillStart, useState, useEffect} from "@odoo/owl";
 import {loadBundle} from "@web/core/assets";
-import {serializeDateTime} from "@web/core/l10n/dates";
 
 const actionRegistry = registry.category("actions");
 
@@ -21,8 +20,8 @@ class InventoryDashboard extends Component {
 
         });
         this.orm = useService('orm');
-        this.canvasRef = useRef("canvas");
-        this.chart = null;
+        // this.canvasRef = useRef("canvas");
+        this.chart = [];
         this.sort = {}
         this.startDate = false
         this.endDate = false
@@ -33,13 +32,7 @@ class InventoryDashboard extends Component {
         useEffect(
             () => {
                 const fetchData = async () => {
-                    this.state.product_data = await this.orm.call(
-                        "inventory.dashboard",
-                        "action_fetch",
-                        [[]],
-                        {date: this.state.sort}
-                    );
-                    this._fetch_data();
+                    await this._fetch_data();
                 };
                 fetchData();
             },
@@ -66,6 +59,15 @@ class InventoryDashboard extends Component {
 
     async _fetch_data() {
         console.log(567)
+        this.state.product_data = await this.orm.call(
+            "inventory.dashboard",
+            "action_fetch",
+            [[]],
+            {date: this.state.sort}
+        );
+        for (let i of this.chart) {
+            i.destroy();
+        }
         // fetch all warehouses
         this.state.warehouses = await this.orm.searchRead("stock.warehouse",
             [],
@@ -73,10 +75,6 @@ class InventoryDashboard extends Component {
         )
         // let inventory_location = await this.orm.call("stock.location", "action_fetch", [[]], {});
 
-        if (this.chart) {
-            console.log(1111, this.chart)
-            this.chart.destroy();
-        }
         const chartLabels = this.state.product_data.product_stock;
         const avg_expense_product = this.state.product_data.avg_expense_by_product
         const picking_type = this.state.product_data.picking_group
@@ -129,7 +127,7 @@ class InventoryDashboard extends Component {
         }]
 
         for (const i of data) {
-            this.chart = new Chart(i.chart_id, {
+            const chart = new Chart(i.chart_id, {
                 type: i.type,
                 data: {
                     labels: i.labels,
@@ -151,8 +149,9 @@ class InventoryDashboard extends Component {
                     }
                 },
             });
-        }
+            this.chart.push(chart)
 
+        }
     }
 
 // Warehouse and its location

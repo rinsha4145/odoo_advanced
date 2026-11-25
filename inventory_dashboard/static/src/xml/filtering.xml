@@ -16,7 +16,6 @@
                                 t-att-value="y">
                             <t t-out="y"/>
                         </option>
-                        <!--                        <t t-log="this.state.filtering.selectedYear"/>-->
                     </t>
                 </select>
             </div>

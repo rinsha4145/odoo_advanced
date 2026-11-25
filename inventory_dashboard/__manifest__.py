@@ -11,14 +11,10 @@
         'views/dashboard_view.xml'
     ],
     'assets': {
-        'web.assets_frontend': [
-            'inventory_dashboard/static/css/dashboard_cards.css',
 
-        ],
         'web.assets_backend': [
             'inventory_dashboard/static/src/js/dashboard.js',
             'inventory_dashboard/static/src/xml/dashboard_template.xml',
-            'inventory_dashboard/static/src/xml/dashboard_cards.xml',
             'inventory_dashboard/static/src/xml/warehouse_info_table.xml',
             'inventory_dashboard/static/src/xml/location_stock_info.xml',
             'inventory_dashboard/static/src/xml/filtering.xml',
